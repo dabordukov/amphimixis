@@ -17,4 +17,5 @@ dev = [
     "pylint",
     "types-paramiko",
     "types-pyyaml",
+    "pytest",
 ]
