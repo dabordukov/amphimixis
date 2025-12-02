@@ -41,6 +41,7 @@ class Profiler:
         executable: str = "",
     ):
         self.logger = logger.setup_logger("PROFILER")
+        self.printer = printer
         self.machine = build.run_machine
         self.build = build
         self.executable = executable
@@ -49,7 +50,7 @@ class Profiler:
 
     def execution_time(self) -> bool:
         """Measure execution time: real, user, kernel"""
-
+        self.printer.print(self.build.build_id, "Measuring time execution...")
         error, _, stderr = self.shell.run(f"cd {self.build.build_path}")
         if error != 0:
             self.logger.error("".join(stderr[0]))
@@ -59,11 +60,14 @@ class Profiler:
         self.logger.info(
             "Measure execution time %s\n\tCommand: %s", self.executable, command
         )
+
         error, stdout, stderr = self.shell.run(command)
         if error != 0:
             error_message = "STDERR: " + "".join(stderr[0])
             error_message += "STDOUT: " + "".join(stdout[0])
             self.logger.error(error_message)
+            self.printer.print(self.build.build_id, "Error measuring time.")
+
             return False
 
         self.stats.update(
@@ -78,6 +82,7 @@ class Profiler:
     def test_executable(self) -> bool:
         """Checks if executable runs and returns no errors"""
 
+        self.printer.print(self.build.build_id, "Testing executable...")
         error, stdout, stderr = self.shell.run(f"cd {self.build.build_path}")
         if error != 0:
             error_message = "STDERR: " + "".join(line for cmd in stdout for line in cmd)
@@ -95,6 +100,8 @@ class Profiler:
     def perf_stat_collect(self, options: str = "") -> bool:
         """Collect performance statistics using 'perf stat'."""
 
+        self.printer.print(self.build.build_id, "Perf start collecting...")
+
         error, _, stderr = self.shell.run(
             f"cd {self.build.build_path}",
         )
@@ -111,6 +118,8 @@ class Profiler:
             self.logger.error(
                 "Executable returned %d code\n%s", error, "".join(stderr[0])
             )
+            self.printer.print(self.build.build_id, "Error collecting perf stat.")
+
             return False
 
         self.stats.update({Stats.PERF_STAT: "".join(stderr[0])})

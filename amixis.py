@@ -11,7 +11,6 @@ import threading
 import time
 from pathlib import Path
 from typing import Callable
-from urllib.parse import parse_qs
 
 from amphimixis import (
     Builder,
@@ -253,7 +252,7 @@ def main():
             analyze(project)
             parse_config(project, config_file_path=str(config_file))
             printer = PrintToStdout(project, len(project.builds))
-            informer = JobsInformer(printer.print_data)
+            informer = JobsInformer(printer.print_data, 0.1)
             threads: list[threading.Thread] = []
             for _, build in enumerate(project.builds):
                 # Builder.build_for_linux(project, build, printer)
@@ -268,7 +267,7 @@ def main():
             for thread in threads:
                 thread.start()
 
-            time.sleep(2)
+            time.sleep(0.2)
 
             informer.inform()
 

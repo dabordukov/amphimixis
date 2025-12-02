@@ -39,10 +39,13 @@ class Builder:
                 f"{Builder._normbase(project.path)}_builds/"
                 f"{Builder._normbase(build.build_path)}"
             )
+
+            printer.print(build.build_id, "Copying project sources to remote machine")
             if not shell.copy_to_remote(
                 os.path.normpath(project.path), "~/amphimixis/"
             ):
                 _logger.error("Error in copying source files")
+                printer.print(build.build_id, "Error in copying source files")
                 return False
         else:
             path = f"{build.build_path}"  # if building on the local machine
@@ -56,12 +59,14 @@ class Builder:
             runner_prompt = project.runner.get_runner_prompt(project, build, printer)
             _logger.info("Run building with: %s", runner_prompt)
 
+            printer.print(build.build_id, "Building...")
             err, stdout, stderr = shell.run(
                 f"mkdir -p {path}",
                 f"cd {path}",
                 configuration_prompt,
                 runner_prompt,
             )
+
             if len(stderr) >= 1 and len(stderr[0]) != 0:
                 _logger.error(
                     "Error in creating directory on current machine: %s",
@@ -82,6 +87,7 @@ class Builder:
                 _logger.info("Building output:\n%s", "".join(stdout[3]))
                 _logger.info("Building stderr:\n%s", "".join(stderr[3]))
 
+            printer.print(build.build_id, "Built!")
             return err == 0
         except FileNotFoundError:
             return False
