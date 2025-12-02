@@ -3,6 +3,7 @@
 from enum import Enum
 
 from amphimixis import general, logger, shell
+from amphimixis.general import Printer
 
 
 class Stats(Enum):
@@ -33,12 +34,17 @@ _commands_args: dict[str, dict[str, str]] = {
 class Profiler:
     """Class for profiling an executable within a project."""
 
-    def __init__(self, build: general.Build, executable: str = ""):
+    def __init__(
+        self,
+        build: general.Build,
+        printer: Printer,
+        executable: str = "",
+    ):
         self.logger = logger.setup_logger("PROFILER")
         self.machine = build.run_machine
         self.build = build
         self.executable = executable
-        self.shell = shell.Shell(self.machine).connect()
+        self.shell = shell.Shell(self.machine, printer, build.build_id).connect()
         self.stats: dict[Stats, str] = {}
 
     def execution_time(self) -> bool:

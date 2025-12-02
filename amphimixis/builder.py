@@ -1,8 +1,10 @@
 """Module that builds a build based on configuration"""
 
 import os
+
 from amphimixis import logger
-from amphimixis.general.general import Project, Build
+from amphimixis.general import NullPrinter, Printer
+from amphimixis.general.general import Build, Project
 from amphimixis.shell.shell import Shell
 
 _logger = logger.setup_logger("BUILDER")
@@ -24,9 +26,11 @@ class Builder:
                 _logger.info("Build failed")
 
     @staticmethod
-    def build_for_linux(project: Project, build: Build) -> bool:
+    def build_for_linux(
+        project: Project, build: Build, printer: Printer = NullPrinter()
+    ) -> bool:
         """The method build program on Linux"""
-        shell = Shell(build.build_machine).connect()
+        shell = Shell(build.build_machine, printer, build.build_id).connect()
 
         path: str  # path to build on the machine
         if build.build_machine.address is not None:  # if building on the remote machine
@@ -49,7 +53,7 @@ class Builder:
             )
             _logger.info("Configuration with: %s", configuration_prompt)
 
-            runner_prompt = project.runner.get_runner_prompt(project, build)
+            runner_prompt = project.runner.get_runner_prompt(project, build, printer)
             _logger.info("Run building with: %s", runner_prompt)
 
             err, stdout, stderr = shell.run(

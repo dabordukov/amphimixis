@@ -1,6 +1,6 @@
 "Make IBuildSystem implementation"
 
-from amphimixis.general import Build, IBuildSystem, Project
+from amphimixis.general import Build, IBuildSystem, Printer, Project
 from amphimixis.shell import Shell
 
 
@@ -15,9 +15,9 @@ class Make(IBuildSystem):
 
     # pylint: disable=unused-argument
     @staticmethod
-    def get_runner_prompt(project: Project, build: Build) -> str:
+    def get_runner_prompt(project: Project, build: Build, printer: Printer) -> str:
         """Generate runner prompt"""
-        shell = Shell(build.build_machine).connect()
+        shell = Shell(build.build_machine, printer, build.build_id).connect()
         err, stdout, _ = shell.run("nproc")
         nproc = int(stdout[0][0])
 

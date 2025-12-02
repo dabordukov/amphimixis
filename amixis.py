@@ -3,12 +3,19 @@
 """Amphimixis CLI tool for build automation and profiling."""
 
 import argparse
+import atexit
+import os
 import sys
 import textwrap
+import threading
+import time
 from pathlib import Path
+from typing import Callable
+from urllib.parse import parse_qs
 
 from amphimixis import (
     Builder,
+    Printer,
     Profiler,
     analyze,
     build_systems_dict,
@@ -20,6 +27,86 @@ from amphimixis import (
 YELLOW = "\033[93m"
 GRAY = "\033[90m"
 RESET = "\033[0m"
+
+
+class JobsInformer:
+    """Class for informing about alive jobs."""
+
+    lock: threading.Lock
+    alive_workers: int
+    printer: Printer
+    delay: float
+
+    def __init__(self, inform_function: Callable[[], None], delay: float = 0.5):
+        self.lock = threading.Lock()
+        self.alive_workers = 0
+        self.inform_function = inform_function
+        self.delay = delay
+
+    def increment_workers(self):
+        """Increment the count of alive workers."""
+        with self.lock:
+            self.alive_workers += 1
+
+    def decrement_workers(self):
+        """Decrement the count of alive workers."""
+        with self.lock:
+            self.alive_workers -= 1
+
+    def inform(self):
+        """Inform about alive jobs periodically."""
+        while self.alive_workers > 0:
+            self.inform_function()
+            time.sleep(self.delay)
+
+        self.inform_function()
+
+
+class PrintToStdout(Printer):
+    """Stdout Printer"""
+
+    symbols = ["/", "-", "\\", "|", "/", "-", "\\", "|"]
+    build_progress_string = "[{build_id}][{symbol}] {message}"
+    counter: list[int]
+    build_message: list[str]
+    build_id_to_index: dict[str, int]
+    number_of_builds: int
+    project: general.Project
+
+    def __init__(self, project: general.Project, number_of_builds: int):
+        self.project = project
+        self.number_of_builds = number_of_builds
+        self.build_message = ["None"] * number_of_builds
+        self.counter = [0] * number_of_builds
+        self.build_id_to_index = {}
+        for numeric_id, build in enumerate(project.builds):
+            self.build_id_to_index[build.build_id] = numeric_id
+
+    def step(self, build_id: str):
+        """Advance the progress counter by one step"""
+
+        self.counter[self.build_id_to_index[build_id]] = (
+            self.counter[self.build_id_to_index[build_id]] + 1
+        ) % len(self.symbols)
+
+    def print(self, build_id: str, message: str):
+        """Send message to user"""
+
+        self.build_message[self.build_id_to_index[build_id]] = message
+
+    def print_data(self):
+        """Print progress to stdout"""
+
+        os.system("clear")
+        for build in self.project.builds:
+            index = self.build_id_to_index[build.build_id]
+            print(
+                self.build_progress_string.format(
+                    build_id=build.build_id,
+                    symbol=self.symbols[self.counter[index]],
+                    message=self.build_message[index],
+                )
+            )
 
 
 class CustomFormatterClass(
@@ -159,34 +246,90 @@ def main():
         build_systems_dict["cmake"],
     )
 
+    _secondary_buffer()
+
     try:
         if not any([args.analyze, args.build, args.profile]):
             analyze(project)
             parse_config(project, config_file_path=str(config_file))
-            Builder.build(project)
-            profiler_ = Profiler(project.builds[0])
-            profiler_.execution_time()
-            print(profiler_.stats)
+            printer = PrintToStdout(project, len(project.builds))
+            informer = JobsInformer(printer.print_data)
+            threads: list[threading.Thread] = []
+            for _, build in enumerate(project.builds):
+                # Builder.build_for_linux(project, build, printer)
+                # profiler_ = Profiler(project.builds[0], printer)
+                # profiler_.execution_time()
+                threads.append(
+                    threading.Thread(
+                        target=_run_all, args=[project, build, printer, informer]
+                    )
+                )
+                # run_all(project, build, printer, informer)
+            for thread in threads:
+                thread.start()
 
-        if args.analyze:
-            analyze(project)
+            time.sleep(2)
 
-        if args.build:
-            parse_config(project, config_file_path=str(config_file))
+            informer.inform()
 
-            Builder.build(project)
+        # if args.analyze:
+        #     analyze(project=project)
 
-        if args.profile:
-            profiler_ = Profiler(project.builds[0])
-            profiler_.execution_time()
-            print(profiler_.stats)
+        # if args.build:
+        #     parse_config(project, config_file_path=str(config_file))
 
-        sys.exit(0)
+        #     for build_id, build in enumerate(project.builds):
+        #         Builder.build_for_linux(project, build, printer)
+
+        # if args.profile:
+        #     for build_id, build in enumerate(project.builds):
+        #         profiler_ = Profiler(project.builds[0], build_id, printer)
+        #         profiler_.execution_time()
+        #         print(profiler_.stats)
+
+        return 0
 
     except (FileNotFoundError, ValueError, RuntimeError, LookupError, TypeError) as e:
+        _primary_buffer()
         print(f"Error: {e}")
-        sys.exit(1)
+        return 1
 
 
+def _run_all(
+    project: general.Project,
+    build: general.Build,
+    printer: general.Printer,
+    informer: JobsInformer,
+):
+    informer.increment_workers()
+    Builder.build_for_linux(project, build, printer)
+    profiler_ = Profiler(project.builds[0], printer)
+    if not profiler_.test_executable():
+        informer.decrement_workers()
+        return
+
+    if not profiler_.execution_time():
+        informer.decrement_workers()
+        return
+
+    if not profiler_.perf_stat_collect():
+        informer.decrement_workers()
+        return
+
+    informer.decrement_workers()
+
+
+def _primary_buffer():
+    print("\x1b[?1049l")
+
+
+def _secondary_buffer():
+    print("\x1b[?1049h")
+
+
+# pylint: disable=invalid-name
 if __name__ == "__main__":
-    main()
+    atexit.register(_primary_buffer)
+    _error = main()
+    input("Press enter to exit...")
+    sys.exit(_error)

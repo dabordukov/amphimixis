@@ -4,7 +4,7 @@ from amphimixis.analyzer import analyze
 from amphimixis.build_systems import build_systems_dict
 from amphimixis.builder import Builder
 from amphimixis.configurator import parse_config
-from amphimixis.general import general
+from amphimixis.general import NullPrinter, Printer, general
 from amphimixis.profiler import Profiler
 from amphimixis.profiler import Stats as ProfilerStats
 from amphimixis.shell import Shell
@@ -20,4 +20,6 @@ __all__ = [
     "ProfilerStats",
     "Shell",
     "validate",
+    "Printer",
+    "NullPrinter",
 ]

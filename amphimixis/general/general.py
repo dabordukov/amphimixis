@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum
 
+from .user_interface import Printer
+
 
 class Arch(str, Enum):
     """Supported architectures"""
@@ -45,6 +47,7 @@ class MachineInfo:
     auth: MachineAuthenticationInfo | None
 
 
+# pylint: disable=too-many-instance-attributes
 @dataclass
 class Build:
     """Class with information about one build of project
@@ -59,6 +62,7 @@ class Build:
     build_path: str
     toolchain: str | None
     sysroot: str | None
+    build_id: str
     config_flags: str = ""
     compiler_flags: str = ""
 
@@ -89,5 +93,5 @@ class IBuildSystem(ABC):
 
     @staticmethod
     @abstractmethod
-    def get_runner_prompt(project: Project, build: Build) -> str:
+    def get_runner_prompt(project: Project, build: Build, printer: Printer) -> str:
         """Generate runner prompt"""

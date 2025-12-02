@@ -1,8 +1,10 @@
 """Module that analyzes project's repository and creates file with its information"""
 
 import glob
-from os import path, listdir
+from os import listdir, path
+
 import yaml
+
 from amphimixis import general, logger
 
 log = logger.setup_logger("ANALYZER")

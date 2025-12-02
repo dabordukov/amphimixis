@@ -2,8 +2,9 @@
 
 import os
 import queue
-from amphimixis.general.general import Build, IBuildSystem, Project
+
 from amphimixis import logger
+from amphimixis.general import Build, IBuildSystem, Printer, Project
 
 _logger = logger.setup_logger("CMAKE")
 
@@ -49,7 +50,7 @@ class CMake(IBuildSystem):
         return command
 
     @staticmethod
-    def get_runner_prompt(project: Project, build: Build) -> str:
+    def get_runner_prompt(project: Project, build: Build, printer: Printer) -> str:
         """Generate runner prompt"""
 
         raise NotImplementedError
