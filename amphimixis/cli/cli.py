@@ -12,11 +12,11 @@ class CLI(general.IUI):
 
         :param str message: Message to print to the console"""
 
-    def update_message(self, message: str, build_id: str) -> None:
+    def update_message(self, build_id: str, message: str) -> None:
         """Update message for specific build
 
-        :param str message: Message to store
         :param str build_id: Build identifier
+        :param str message: Message to store
         """
 
     def step(self, build_id: str) -> None:
