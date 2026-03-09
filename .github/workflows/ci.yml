@@ -143,6 +143,6 @@ jobs:
       run: |
         echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
         sudo apt install ruby-mdl u-boot-qemu xz-utils sshpass
-        sudo apt insatll qemu-system --fix-missing
+        sudo apt install qemu-system --fix-missing
         ci/runner.sh
 >>>>>>> e159246 (fix(ci): fix installing xz in ci/yml)
