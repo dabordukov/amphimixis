@@ -18,13 +18,15 @@ IP_ADDRESS = "127.0.0.1"
 USERNAME = "root"
 PASSWORD = "root"
 WORKDIR = "/tmp/riscv_vm_test"
+TESTING_PROJECT_URL = "https://github.com/Microsoft/vcpkg.git"
+CONFIG_FLAGS = ""
 
 
 @pytest.mark.integration
 def test_e2e_riscv_vm(riscv_vm_run_and_install_packages):
     """End-to-end test for building and profiling on a RISC-V QEMU VM."""
 
-    repo_url = "https://github.com/sailormoon/flags.git"
+    repo_url = TESTING_PROJECT_URL
     wd_path = tempfile.mkdtemp(prefix="temp_dir")
     repo_path = Path(wd_path) / "repo"
     command = ["git", "clone", repo_url, repo_path]
@@ -130,7 +132,7 @@ def run_command(command: str) -> None:
     Uses sshpass for password authentication to connect to the running VM.
     The VM must be accessible on localhost:2222 with root/root credentials."""
 
-    result = subprocess.run(
+    subprocess.run(
         [
             "sshpass",
             "-p",
@@ -165,7 +167,7 @@ def _create_input_yaml() -> dict:
         "recipes": [
             {
                 "id": 1,
-                "config_flags": "-DFLAGS_BUILD_TESTS=ON",
+                "config_flags": CONFIG_FLAGS,
                 "compiler_flags": {"cxx_flags": "-O2"},
             }
         ],
