@@ -59,10 +59,14 @@ def riscv_vm_run_and_install_packages():
 
     url = "https://s3.cloud.ru/qemu-riscv64-debian/image.qcow2.xz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=86d0f13a-77a6-426b-9ab9-3d64072c2c51%3Ac88ebc3d71c1674f11357a0e2331244a%2F20260309%2Fru-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260309T194747Z&X-Amz-Expires=604800&X-Amz-Signature=bc4b08f454cb3d4a152bac1a2f53b2a5c792ba3faae624a45291c10a40a66bf8&X-Amz-SignedHeaders=host&response-content-disposition=attachment&x-amz-checksum-mode=ENABLED&x-id=GetObject"
 
+    print("Successful downloading image")
+
     if not qcow2_file.exists():
         if not xz_file.exists():
             subprocess.run(["wget", "-O", str(xz_file), f"{url}"])
         subprocess.run(["xz", "-d", str(xz_file)], check=True)
+
+    print("Successful unarchieving image")
 
     kernel = "/usr/lib/u-boot/qemu-riscv64_smode/uboot.elf"
     if not Path(kernel).exists():
@@ -74,7 +78,7 @@ def riscv_vm_run_and_install_packages():
         "-cpu",
         "rv64",
         "-m",
-        "1G",
+        "256M",
         "-device",
         "virtio-blk-device,drive=hd",
         "-drive",
@@ -97,7 +101,7 @@ def riscv_vm_run_and_install_packages():
     ]
 
     process = subprocess.Popen(qemu_cmd, text=True)
-    time.sleep(30)
+    time.sleep(90)
     subprocess.run(
         [
             "ssh-keygen",
@@ -108,7 +112,12 @@ def riscv_vm_run_and_install_packages():
         ],
         capture_output=True,
         text=True,
-    )
+    ).returncode
+
+    if process.returncode != 0:
+        print("Failed to set up the VM")
+    else:
+        print("Successful setting up the VM")
 
     vm_update_cmd = "apt-get update"
     vm_install_packages = "apt-get install -y cmake make g++ linux-perf"
