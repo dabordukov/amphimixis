@@ -97,7 +97,7 @@ def riscv_vm_run_and_install_packages():
         "virtio-rng-device,rng=rng",
         "-nographic",
         "-append",
-        "root=LABEL=rootfs rw noquiet norelocate fdt_high=0xffffffff mem=512M console=ttyS0",
+        "root=LABEL=rootfs rw noquiet norelocate fdt_high=0xffffffff mem=256M console=ttyS0",
     ]
 
     process = subprocess.Popen(qemu_cmd, text=True)
