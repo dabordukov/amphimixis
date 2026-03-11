@@ -58,7 +58,6 @@ def riscv_vm_run_and_install_packages():
     repo_with_image = Path(WORKDIR) / "dqib_riscv64-virt"
     qcow2_file = repo_with_image / "image.qcow2"
 
-    url1 = "https://s3.cloud.ru/qemu-riscv64-debian/image.qcow2.xz?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=86d0f13a-77a6-426b-9ab9-3d64072c2c51%3Ac88ebc3d71c1674f11357a0e2331244a%2F20260309%2Fru-central-1%2Fs3%2Faws4_request&X-Amz-Date=20260309T194747Z&X-Amz-Expires=604800&X-Amz-Signature=bc4b08f454cb3d4a152bac1a2f53b2a5c792ba3faae624a45291c10a40a66bf8&X-Amz-SignedHeaders=host&response-content-disposition=attachment&x-amz-checksum-mode=ENABLED&x-id=GetObject"
     url = "https://gitlab.com/api/v4/projects/giomasce%2Fdqib/jobs/artifacts/master/download?job=convert_riscv64-virt"
 
     if not qcow2_file.exists():
