@@ -63,12 +63,10 @@ def riscv_vm_run_and_install_packages():
     if not qcow2_file.exists():
         if not zip_archive.exists():
             subprocess.run(["wget", "-O", str(zip_archive), f"{url}"], check=True)
-        subprocess.run(
-            ["unzip", str(zip_archive), "-d", str(repo_with_image)], check=True
-        )
+        subprocess.run(["unzip", str(zip_archive), "-d", str(WORKDIR)], check=True)
 
-    kernel = Path(WORKDIR) / "dqib_riscv64-virt" / "kernel"
-    initrd = Path(WORKDIR) / "dqib_riscv64-virt" / "initrd"
+    kernel = repo_with_image / "kernel"
+    initrd = repo_with_image / "initrd"
     qemu_cmd = [
         "qemu-system-riscv64",
         "-machine",
