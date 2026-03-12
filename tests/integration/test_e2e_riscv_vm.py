@@ -74,7 +74,7 @@ def riscv_vm_run_and_install_packages():
         "-cpu",
         "rv64",
         "-m",
-        "1G",
+        "4G",
         "-device",
         "virtio-blk-device,drive=hd",
         "-drive",
