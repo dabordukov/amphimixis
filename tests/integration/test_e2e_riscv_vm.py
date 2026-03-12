@@ -47,7 +47,8 @@ def test_e2e_riscv_vm(riscv_vm_run_and_install_packages):
         assert result.returncode == 0
     finally:
         os.chdir(orig_dir)
-
+        with open("./amphimixis.log", 'r') as f:
+            print(f.read())
 
 @pytest.fixture
 def riscv_vm_run_and_install_packages():
