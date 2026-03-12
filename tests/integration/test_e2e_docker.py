@@ -54,7 +54,6 @@ def test_e2e_remote_machine_between_containers(
     exit_code = client_container.exec_run(add_ip_cmd)[0]
     assert exit_code == 0
 
-<<<<<<< HEAD
     add_jobs_cmd = [
         "bash",
         "-c",
@@ -73,13 +72,6 @@ def test_e2e_remote_machine_between_containers(
         "-c",
         "/root/.local/bin/uv run --project /app /app/amixis.py /workspace/tinyxml2 --events cycles",
     ]
-=======
-    repo_path = clone_repo("https://github.com/Microsoft/vcpkg.git")
-    copy_cmd = ["docker", "cp", repo_path, "build-client:/workspace/tinyxml2"]
-    subprocess.run(copy_cmd, check=True)
-
-    build_cmd = ["bash", "-c", "python3 /app/amixis.py /workspace/tinyxml2"]
->>>>>>> 86a6daa (fix(ci): add installing qemu-system in ci.yml, replace using yaml-cpp with tinyxml2 in tests end-to-end)
     exit_code = client_container.exec_run(build_cmd, workdir="/workspace")[0]
 
     if os.getenv("CI"):
