@@ -111,27 +111,23 @@ def riscv_vm_run_and_install_packages():
         text=True,
     )
 
-    vm_update_cmd = "apt-get update && touch _succesful_update"
-    vm_install_packages = (
-        "apt-get install -y cmake make g++ linux-perf && touch _successful_installation"
-    )
+    vm_update_cmd = "apt-get update"
+    vm_install_packages = "apt-get install -y cmake make g++ linux-perf"
     run_command(str(vm_update_cmd))
-    while run_command("ls _successful_update") != 0:
-        time.sleep(5)
+    time.sleep(60)
     run_command(str(vm_install_packages))
-    while run_command("ls _successful_installation") != 0:
-        time.sleep(5)
+    time.sleep(120)
 
     yield process
     process.terminate()
 
 
-def run_command(command: str) -> int:
+def run_command(command: str) -> None:
     """Execute a command inside the RISC-V VM via SSH.
     Uses sshpass for password authentication to connect to the running VM.
     The VM must be accessible on localhost:2222 with root/root credentials."""
 
-    return subprocess.run(
+    subprocess.run(
         [
             "sshpass",
             "-p",
@@ -146,7 +142,7 @@ def run_command(command: str) -> int:
         ],
         capture_output=True,
         text=True,
-    ).returncode
+    )
 
 
 def _create_input_yaml() -> dict:
