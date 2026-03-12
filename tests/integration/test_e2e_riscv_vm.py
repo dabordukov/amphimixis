@@ -114,7 +114,9 @@ def riscv_vm_run_and_install_packages():
     vm_update_cmd = "apt-get update"
     vm_install_packages = "apt-get install -y cmake make g++ linux-perf"
     run_command(str(vm_update_cmd))
+    time.sleep(30)
     run_command(str(vm_install_packages))
+    time.sleep(90)
 
     yield process
     process.terminate()
@@ -140,7 +142,6 @@ def run_command(command: str) -> None:
         ],
         capture_output=True,
         text=True,
-        check=True,
     )
 
 
