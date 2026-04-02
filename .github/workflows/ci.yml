@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    
+
 jobs:
   linters-and-unit:
     runs-on: ubuntu-latest
@@ -45,9 +45,18 @@ jobs:
           ci/pylint.sh
           ci/ruff.sh
       - name: Run unit tests
-        run: |
+        env:
+          COVERAGE_FILE: .coverage.unit
+        run: |1
           echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
-          uv run pytest -m unit
+          uv run pytest -m unit --cov=amphimixis --cov=amixis --cov-report=
+      - name: Upload unit coverage
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-unit
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: .coverage.unit
 
   integration-tests-docker:
     needs: linters-and-unit
@@ -83,12 +92,19 @@ jobs:
           echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
           uv run pytest -m integration -k docker
       - uses: actions/upload-artifact@v7
-        if: always()
+        if: failure()
         with:
           name: test_workspaces-integration-docker
           include-hidden-files: true
           path: |
             /tmp/test_workspace_*
+      - uses: actions/upload-artifact@v7
+        if: success()
+        with:
+          name: integration-docker-coverage
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: /tmp/test_workspace_*/workspace/.coverage
 
   integration-tests-local:
     needs: linters-and-unit
@@ -124,9 +140,66 @@ jobs:
           echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
           uv run pytest -m integration -k local
       - uses: actions/upload-artifact@v7
-        if: always()
+        if: failure()
         with:
           name: test_workspaces-integration-local
           include-hidden-files: true
           path: |
             /tmp/test_workspace_*
+      - uses: actions/upload-artifact@v7
+        if: success()
+        with:
+          name: integration-local-coverage
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: /tmp/test_workspace_*/.coverage
+
+  combine-coverage:
+    needs:
+      - linters-and-unit
+      - integration-tests-docker
+      - integration-tests-local
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.0.0
+        with:
+          enable-cache: true
+          cache-local-path: .uv-cache
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Download all coverage artifacts
+        uses: actions/download-artifact@v6
+        with:
+          path: coverage-artifacts
+      - name: Combine coverage data
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mapfile -t covfiles < <(find coverage-artifacts -type f \( -name '.coverage' -o -name '.coverage.*' \) | sort)
+          printf '%s\n' "${covfiles[@]}"
+
+          if [ "${#covfiles[@]}" -eq 0 ]; then
+              echo "No coverage data files were downloaded from artifacts."
+              exit 1
+          fi
+
+          uv run coverage combine --rcfile=.coveragerc --keep "${covfiles[@]}"
+      - name: Generate coverage reports
+        run: |
+          uv run coverage report -m --rcfile=.coveragerc
+          uv run coverage xml --rcfile=.coveragerc -o coverage.xml
+          uv run coverage html --rcfile=.coveragerc -d htmlcov
+      - name: Upload combined coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          include-hidden-files: true
+          if-no-files-found: warn
+          path: |
+            .coverage
+            coverage.xml
+            htmlcov/

@@ -35,6 +35,7 @@ dev = [
     "types-paramiko",
     "types-pyyaml",
     "types-docker",
+    "pytest-cov",
 ]
 
 [tool.uv]

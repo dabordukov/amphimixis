@@ -30,7 +30,14 @@ def test_e2e_local_machine(clone_repo, create_working_space):
 
         os.chdir(working_dir)
         command = [
-            "python3",
+            "/usr/bin/env",
+            "uv",
+            "--project",
+            orig_dir,
+            "run",
+            "coverage",
+            "run",
+            "-a",
             orig_dir / "amixis.py",
             str(repo_path),
             "--events",

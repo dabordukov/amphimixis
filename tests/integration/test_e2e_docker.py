@@ -70,7 +70,7 @@ def test_e2e_remote_machine_between_containers(
     build_cmd = [
         "bash",
         "-c",
-        "/root/.local/bin/uv run --project /app /app/amixis.py /workspace/tinyxml2 --events cycles",
+        "/root/.local/bin/uv --project /app run coverage run -a /app/amixis.py /workspace/tinyxml2 --events cycles",
     ]
     exit_code = client_container.exec_run(build_cmd, workdir="/workspace")[0]
 
