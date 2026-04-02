@@ -25,20 +25,17 @@ class CustomFormatterClass(
     def format_help(self) -> str:
         """Format help message with custom banner and examples."""
 
-        banner = textwrap.dedent(
-            f"""
+        banner = textwrap.dedent(f"""
             {GRAY}*****************************************************************{RESET}
 
                  {YELLOW}✰  Amphimixis — build automation and profiling tool  ✰{RESET}
 
             {GRAY}*****************************************************************{RESET}
-        """
-        )
+        """)
 
         help_text = super().format_help()
 
-        examples = textwrap.dedent(
-            """
+        examples = textwrap.dedent("""
             Examples:
 
               amixis /path/to/folder/with/project
@@ -77,8 +74,7 @@ class CustomFormatterClass(
 
               amixis --compare a.scriptout b.scriptout --events cycles cache-misses
                   → Compares only the specified events from two .scriptout files.
-            """
-        )
+            """)
 
         return f"{banner}\n{help_text}\n{examples}"
 

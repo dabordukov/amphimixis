@@ -44,6 +44,9 @@ package = true
 [tool.mypy]
 disable_error_code = ["import-untyped", "annotation-unchecked"]
 
+[tool.black]
+target-version = ["py312"]
+
 [tool.isort]
 profile = "black"
 
