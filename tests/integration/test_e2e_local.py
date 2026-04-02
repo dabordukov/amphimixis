@@ -37,6 +37,7 @@ def test_e2e_local_machine(clone_repo, create_working_space):
             "run",
             "coverage",
             "run",
+            f"--rcfile={orig_dir/'.coveragerc'}",
             "-a",
             orig_dir / "amixis.py",
             str(repo_path),

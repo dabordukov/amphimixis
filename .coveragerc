@@ -1,0 +1,15 @@
+[run]
+data_file = .coverage
+relative_files = True
+source =
+    amphimixis
+
+[paths]
+repo =
+    .
+    /home/runner/work/*/amphimixis
+    /app
+
+[report]
+omit =
+    tests/*

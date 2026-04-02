@@ -49,7 +49,7 @@ jobs:
           COVERAGE_FILE: .coverage.unit
         run: |1
           echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
-          uv run pytest -m unit --cov=amphimixis --cov=amixis --cov-report=
+          uv run pytest -m unit --cov --cov-report=
       - name: Upload unit coverage
         uses: actions/upload-artifact@v7
         with:
