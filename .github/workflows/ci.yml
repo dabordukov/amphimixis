@@ -97,7 +97,7 @@ jobs:
       - name: Install perf
         run: |
           if ! perf --version; then
-              sudo apt update && sudo apt-get install -y linux-tools-azure 
+              sudo apt update && sudo apt-get install -y linux-tools-azure
               export PERF_PATH=$(find -L /usr/lib/linux-tools/ -name perf -type f | head -n 1)
               if [ -n "$PERF_PATH" ]; then
                   sudo ln -sf "$PERF_PATH" /usr/bin/perf
@@ -130,3 +130,41 @@ jobs:
           include-hidden-files: true
           path: |
             /tmp/test_workspace_*
+
+
+
+
+  integration-tests-riscv:
+    needs: linters-and-unit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install perf
+        run: |
+          sudo apt update && sudo apt install qemu-system qemu-utils sshpass
+          if ! perf --version; then
+              sudo apt update && sudo apt-get install -y linux-tools-azure 
+              export PERF_PATH=$(find -L /usr/lib/linux-tools/ -name perf -type f | head -n 1)
+              if [ -n "$PERF_PATH" ]; then
+                  sudo ln -sf "$PERF_PATH" /usr/bin/perf
+              fi
+          fi
+
+          if [ ! -f /usr/libexec/perf-core/perf-archive ]; then
+              sudo mkdir -p /usr/libexec/perf-core
+              curl -s https://raw.githubusercontent.com/torvalds/linux/master/tools/perf/perf-archive.sh | sudo tee /usr/libexec/perf-core/perf-archive
+              sudo chmod +x /usr/libexec/perf-core/perf-archive
+          fi
+          perf --version
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.0.0
+        with:
+          enable-cache: true
+          cache-local-path: .uv-cache
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Run integration tests for RISC-V
+        run: |
+          echo '-1' | sudo tee /proc/sys/kernel/perf_event_paranoid
+          uv run pytest -m integration -k riscv
