@@ -6,7 +6,6 @@ a RISC-V VM, installation of dependencies, and runs amphimixis to compile a test
 """
 
 import os
-import socket
 import subprocess
 import tempfile
 import time
@@ -117,43 +116,40 @@ def riscv_vm_run_and_install_packages():
     exit_code = run_command(str(vm_install_packages))
     assert exit_code == 0
 
-    yield process
-    process.terminate()
+    if not os.getenv("CI"):
+        yield process
+        process.terminate()
 
 
 def wait_for_ssh(port: int = 2222, max_retries: int = 30, delay: int = 5) -> None:
     """Wait for SSH to become available on the VM."""
 
     for attempt in range(max_retries):
-        try:
-            with socket.create_connection((IP_ADDRESS, port), timeout=5):
-                result = subprocess.run(
-                    [
-                        "sshpass",
-                        "-p",
-                        PASSWORD,
-                        "ssh",
-                        "-o",
-                        "StrictHostKeyChecking=no",
-                        "-o",
-                        "ConnectTimeout=5",
-                        "-p",
-                        str(port),
-                        f"{USERNAME}@{IP_ADDRESS}",
-                        "echo SSH ready",
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=10,
-                )
+        result = subprocess.run(
+            [
+                "sshpass",
+                "-p",
+                PASSWORD,
+                "ssh",
+                "-o",
+                "StrictHostKeyChecking=no",
+                "-o",
+                "ConnectTimeout=5",
+                "-p",
+                str(port),
+                f"{USERNAME}@{IP_ADDRESS}",
+                "echo SSH ready",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
 
-                if result.returncode == 0 and "SSH ready" in result.stdout:
-                    return
+        if result.returncode == 0 and "SSH ready" in result.stdout:
+            return
 
-        except (socket.timeout, ConnectionRefusedError, subprocess.TimeoutExpired):
-            pass
-
-        time.sleep(delay)
+        if attempt < max_retries - 1:
+            time.sleep(delay)
 
     raise RuntimeError("SSH not available")
 

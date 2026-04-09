@@ -140,7 +140,7 @@ jobs:
     steps:
       - name: Install perf
         run: |
-          sudo apt update && sudo apt install qemu-system qemu-utils sshpass
+          sudo apt update && sudo apt install -y qemu-system qemu-utils sshpass wget unzip
           if ! perf --version; then
               sudo apt update && sudo apt-get install -y linux-tools-azure 
               export PERF_PATH=$(find -L /usr/lib/linux-tools/ -name perf -type f | head -n 1)
