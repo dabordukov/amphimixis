@@ -1,23 +1,23 @@
 build_system: CMake
 runner: Make
 platforms:
-- id: 1
-  arch: x86
-  username: testuser
-  port: 22
-  password: testpass
+  - id: 1
+    arch: x86
+    username: testuser
+    port: 22
+    password: testpass
 
 recipes:
-- id: 1
-  config_flags: "-DCMAKE_BUILD_TYPE=Release -DJSON_BuildTests=ON=ON"
-  compiler_flags:
-    cxx_flags: "-O2"
-  toolchain:
-    cxx_compiler: "/usr/bin/g++"
-  sysroot: "/"
-  
+  - id: 1
+    config_flags: "-DCMAKE_BUILD_TYPE=Release -DJSON_BuildTests=ON"
+    compiler_flags:
+      cxx_flags: "-O2"
+    toolchain:
+      cxx_compiler: "/usr/bin/g++"
+    sysroot: "/"
+
 builds:
-- build_machine: 1
-  run_machine: 1
-  recipe_id: 1
-  jobs:
+  - build_machine: 1
+    run_machine: 1
+    recipe_id: 1
+    jobs:

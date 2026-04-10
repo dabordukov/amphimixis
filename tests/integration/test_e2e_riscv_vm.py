@@ -61,7 +61,7 @@ def riscv_vm_run_and_install_packages():
     qcow2_file = repo_with_image / "image.qcow2"
     snapshot_path = Path(WORKDIR) / "snapshot.qcow2"
 
-    url = "https://gitlab.com/api/v4/projects/giomasce%2Fdqib/jobs/artifacts/master/download?job=convert_riscv64-virt"
+    url = "http://158.160.253.233:8888/debian.zip"
 
     if not qcow2_file.exists():
         if not zip_archive.exists():
@@ -124,15 +124,6 @@ def riscv_vm_run_and_install_packages():
     )
 
     wait_for_ssh(max_retries=60, delay=5)
-
-    vm_update_cmd = "apt-get update"
-    vm_install_packages = "apt-get install -y cmake make g++ linux-perf time"
-
-    exit_code = run_command(str(vm_update_cmd))
-    assert exit_code == 0
-
-    exit_code = run_command(str(vm_install_packages))
-    assert exit_code == 0
 
     yield process
     process.terminate()
