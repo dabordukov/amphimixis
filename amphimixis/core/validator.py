@@ -12,9 +12,9 @@ import yaml
 from amphimixis.core.build_systems import build_systems_dict, runners_dict
 from amphimixis.core.general import (
     IUI,
-    NullUI,
     Arch,
     CompilerFlagsAttrs,
+    NullUI,
     ToolchainAttrs,
 )
 from amphimixis.core.laboratory_assistant import LaboratoryAssistant

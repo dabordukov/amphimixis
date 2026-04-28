@@ -2,8 +2,8 @@
 
 from argparse import ArgumentParser
 
-from amphimixis.core import Builder, parse_config
 from amphimixis.amixis.utils import add_config_arg, add_path_arg
+from amphimixis.core import Builder, parse_config
 from amphimixis.core.general import IUI, NullUI, Project
 
 HELP_MESSAGE = "Build the project according to the generated configuration files"

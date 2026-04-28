@@ -5,9 +5,9 @@ paths into filesystem-friendly filenames and decoding them back without losing
 information.
 """
 
+import glob
 import os
 import pickle
-import glob
 from pathlib import Path
 
 from amphimixis.core.general.constants import PERF_STATS_EXT

@@ -51,3 +51,16 @@ profile = "black"
 
 [project.scripts]
 amixis = "amphimixis.amixis.__main__:main"
+
+[tool.ruff.lint]
+ignore = ["E501"] # Ignore line length warnings
+select = [
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+]
+
+[tool.ruff]
+exclude = ["tests"]
+
+

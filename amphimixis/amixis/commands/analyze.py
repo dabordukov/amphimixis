@@ -3,8 +3,8 @@
 from argparse import ArgumentParser
 from os import path
 
-from amphimixis.core.analyzer import analyze
 from amphimixis.amixis.utils import add_config_arg, add_path_arg
+from amphimixis.core.analyzer import analyze
 from amphimixis.core.general import IUI, NullUI, Project
 
 HELP_MESSAGE = "Analyze the project and detect existing CI, tests, build systems, etc."

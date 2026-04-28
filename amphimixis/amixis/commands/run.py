@@ -2,12 +2,11 @@
 
 from argparse import ArgumentParser
 
-from amphimixis.amixis.utils import add_config_arg, add_events_arg, add_path_arg
-from amphimixis.core.general import IUI, Project, constants, tools, ProjectStats
-
 from amphimixis.amixis.commands.analyze import run_analyze
 from amphimixis.amixis.commands.build import run_build
 from amphimixis.amixis.commands.profile import run_profile
+from amphimixis.amixis.utils import add_config_arg, add_events_arg, add_path_arg
+from amphimixis.core.general import IUI, Project, ProjectStats, constants, tools
 
 HELP_MESSAGE = "Run full pipeline: analyze, build and profile a project"
 

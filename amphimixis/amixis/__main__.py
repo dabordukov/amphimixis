@@ -5,11 +5,10 @@
 import sys
 from pathlib import Path
 
-from amphimixis.core import general
-from amphimixis.amixis.parser import create_parser
 from amphimixis.amixis.commands import COMMANDS
 from amphimixis.amixis.console_animation_printer import ConsoleAnimationPrinter
-from amphimixis.amixis.parser import MAIN_EXAMPLES
+from amphimixis.amixis.parser import MAIN_EXAMPLES, create_parser
+from amphimixis.core import general
 from amphimixis.core.general.constants import DEFAULT_CONFIG_PATH
 
 

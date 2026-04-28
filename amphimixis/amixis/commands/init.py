@@ -1,9 +1,8 @@
 """Config initialization (init) command."""
 
-from pathlib import Path
-from shutil import copyfile, SameFileError, SpecialFileError
-
 from argparse import ArgumentParser
+from pathlib import Path
+from shutil import SameFileError, SpecialFileError, copyfile
 
 from amphimixis.amixis.commands.add.input import get_unique_path
 

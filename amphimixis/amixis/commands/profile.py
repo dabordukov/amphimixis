@@ -5,8 +5,8 @@ import tempfile
 from argparse import ArgumentParser
 from os import path
 
-from amphimixis.core import Profiler, Shell, parse_config
 from amphimixis.amixis.utils import add_config_arg, add_path_arg
+from amphimixis.core import Profiler, Shell, parse_config
 from amphimixis.core.general import IUI, NullUI, Project
 
 HELP_MESSAGE = "Profile the performance of builds"

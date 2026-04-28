@@ -1,12 +1,12 @@
 """CLI commands package."""
 
 from amphimixis.amixis.commands import (
-    init,
     add,
     analyze,
     build,
     clean,
     compare,
+    init,
     profile,
     run,
     validate,
