@@ -49,5 +49,17 @@ disable_error_code = ["import-untyped", "annotation-unchecked"]
 [tool.isort]
 profile = "black"
 
+[tool.pylint.main]
+ignore-paths = ["tests"]
+
+[tool.pylint.messages_control]
+disable = [
+    "too-many-instance-attributes",
+    "too-many-positional-arguments",
+    "too-many-return-statements",
+    "too-few-public-methods",
+    "too-many-locals",
+]
+
 [project.scripts]
 amixis = "amphimixis.amixis.__main__:main"
