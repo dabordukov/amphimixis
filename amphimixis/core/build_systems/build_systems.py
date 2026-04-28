@@ -1,6 +1,7 @@
-"""Containing the dictionaries with name strings of
-build systems/runners and associated
-IHighLevelBuildSystem/ILowLevelBuildSystem implementations
+"""Define mappings for build systems and runners.
+
+Contain dictionaries mapping names to corresponding
+IHighLevelBuildSystem and ILowLevelBuildSystem implementations.
 """
 
 from amphimixis.core.build_systems.cmake import CMake

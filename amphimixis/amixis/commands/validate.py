@@ -13,7 +13,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "config_file",
         type=str,
@@ -30,7 +29,6 @@ def validate_cmd(args, ui: IUI = NULL_UI) -> bool:
     :return: True if validation succeeded, False otherwise
     :rtype: bool
     """
-
     ui.update_message("Config", f"Validate {args.config_file}...")
 
     if not validate(args.config_file, ui):

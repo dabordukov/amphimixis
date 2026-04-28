@@ -1,4 +1,4 @@
-"""Module working with CMake build system"""
+"""Module working with CMake build system."""
 
 import os
 
@@ -19,7 +19,7 @@ _logger = logger.setup_logger("CMAKE")
 
 
 class CMake(BuildSystem, IHighLevelBuildSystem):
-    """Implementation of working with CMake build system"""
+    """Implementation of working with CMake build system."""
 
     _generator_names_map: dict[type[ILowLevelBuildSystem], str] = {
         Make: '"Unix Makefiles"',
@@ -39,11 +39,12 @@ class CMake(BuildSystem, IHighLevelBuildSystem):
         return " ".join(ret_flags)
 
     def build(self, build: Build) -> tuple[int, str, str]:
-        """Configure and build via CMake
+        """Configure and build via CMake.
 
         :param Build build: Build to build
         :rtype: tuple[int, str, str]
-        :return: Tuple of error_code, stdout, stderr"""
+        :return: Tuple of error_code, stdout, stderr
+        """
         shell = Shell(self._project, build.build_machine, self._ui).connect()
 
         build_path = os.path.join(shell.get_project_workdir(), build.build_name)

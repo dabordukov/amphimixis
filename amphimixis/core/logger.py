@@ -1,4 +1,4 @@
-"""Module to operate logging"""
+"""Module to operate logging."""
 
 import logging
 
@@ -6,8 +6,7 @@ LOG_FILE_NAME = "amphimixis.log"
 
 
 def setup_logger(name: str) -> logging.Logger:
-    """Function to create logger with specified name"""
-
+    """Create logger with specified name."""
     if not logging.getLogger().hasHandlers():
         logging.basicConfig(
             level=logging.INFO,

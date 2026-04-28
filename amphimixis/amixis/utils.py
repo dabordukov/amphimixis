@@ -13,7 +13,6 @@ def add_config_arg(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "--config",
         nargs="?",
@@ -28,7 +27,6 @@ def add_path_arg(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "path",
         type=str,
@@ -41,7 +39,6 @@ def add_events_arg(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "--events",
         nargs="*",
@@ -56,7 +53,6 @@ def create_temp_file(content: str) -> Path:
     :return: Path to the created temporary file
     :rtype: Path
     """
-
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".yml", delete=False, encoding="utf-8"
     ) as f:
@@ -72,7 +68,6 @@ def launch_editor(editor: str, temp_path: Path) -> bool:
     :return: True if editor launched successfully, False otherwise
     :rtype: bool
     """
-
     try:
         subprocess.call([editor, str(temp_path)])
         return True
@@ -92,7 +87,6 @@ def read_file_content(temp_path: Path) -> str | None:
     :return: File content as string, or None if an error occurred
     :rtype: str | None
     """
-
     try:
         with open(temp_path, encoding="utf-8") as f:
             return f.read()
@@ -107,7 +101,6 @@ def prompt_continue() -> bool:
     :return: True if user wants to continue, False if user cancels
     :rtype: bool
     """
-
     try:
         answer = input("Press Enter to continue, or 'q' to cancel: ").strip().lower()
         if answer in ("q", "n", "no", "cancel"):
@@ -127,7 +120,6 @@ def get_content_with_editor(editor: str, temp_path: Path) -> None | str:
     :return: File content as string, or None if an error occurred.
     :rtype: str | None
     """
-
     if not launch_editor(editor, temp_path):
         return None
     content = read_file_content(temp_path)

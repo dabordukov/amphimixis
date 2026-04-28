@@ -33,7 +33,7 @@ _commands_args: dict[str, dict[str, str]] = {
 class Profiler:
     """Class for profiling a build within a project."""
 
-    class CustomLogger(logging.LoggerAdapter):
+    class _customLogger(logging.LoggerAdapter):
         """Custom logger to add build and executable prefixes to log messages."""
 
         def process(self, msg, kwargs):
@@ -56,7 +56,7 @@ class Profiler:
         self, project: general.Project, build: general.Build, ui: IUI = NULL_UI
     ):
         self.project = project
-        self.logger = self.CustomLogger(
+        self.logger = self._customLogger(
             logger.setup_logger("PROFILER"), {"build": build.build_name}
         )
         self.machine = build.run_machine
@@ -86,8 +86,8 @@ class Profiler:
         max_number_of_executables=1,
         events: list[str] | None = None,
     ) -> list[str]:
-        """
-        Run profiling on every executable.\n
+        """Run profiling on every executable.
+
         If `build.executables` is empty, finds executables in `build.build_path`.
 
         :param working_directory: absolute path to set working directory.
@@ -114,7 +114,6 @@ class Profiler:
         :return: List of executables for which all profiler steps were completed successfully.
         :rtype: list[str]
         """
-
         if working_directory == "":
             working_directory = self.shell.get_source_dir()
 
@@ -161,8 +160,7 @@ class Profiler:
         return success_executables
 
     def execution_time(self, executable: str, working_directory: str) -> bool:
-        """
-        Measure execution time: real, user, kernel
+        """Measure execution time: real, user, kernel.
 
         :param executable: relative to `build_path` path to executable
         :type executable: str
@@ -173,7 +171,6 @@ class Profiler:
         :return: `False` if non-zero error code is returned. Otherwise `True`
         :rtype: bool
         """
-
         self.ui.update_message(self.build.build_name, "Measuring time...")
         self.logger.info(
             "Measuring execution time started",
@@ -236,9 +233,9 @@ class Profiler:
         return True
 
     def test_executable(self, executable: str, working_directory: str) -> bool:
-        """
-        Checks if executable runs and returns no errors.\n
-        Updates `self.stats[EXECUTABLE]` dictionary with `Stats.EXECUTABLE_RUN_SUCCESS` key
+        """Checks if executable runs and returns no errors.
+
+        Updates `self.stats[EXECUTABLE]` dictionary with `Stats.EXECUTABLE_RUN_SUCCESS` key.
 
         :param executable: relative to `build_path` path to executable
         :type executable: str
@@ -250,7 +247,6 @@ class Profiler:
                  non-zero error code is returned.
         :rtype: bool
         """
-
         self.ui.update_message(self.build.build_name, "Testing...")
         self.logger.info(
             "Smoke test started",
@@ -295,9 +291,9 @@ class Profiler:
     def perf_stat_collect(
         self, executable: str, working_directory: str, options: str = "-ddd"
     ) -> bool:
-        """
-        Collect performance statistics using `perf stat`.\n
-        Updates `self.stats[EXECUTABLE]` dictionary with `Stats.PERF_STAT` key
+        """Collect performance statistics using `perf stat`.
+
+        Updates `self.stats[EXECUTABLE]` dictionary with `Stats.PERF_STAT` key.
 
         :param executable: relative to `build_path` path to executable
         :type executable: str
@@ -311,7 +307,6 @@ class Profiler:
         :return: `False` if `perf stat` return non-zero error code. Otherwise `True`
         :rtype: bool
         """
-
         self.ui.update_message(self.build.build_name, "Perf stat collecting...")
         self.logger.info(
             "Perf stat started",
@@ -376,8 +371,8 @@ class Profiler:
         options: str = "-g -F 1000",
         events: list[str] | None = None,
     ) -> bool:
-        """
-        Collect performance records using `perf record`.\n
+        """Collect performance records using `perf record`.
+
         Saves `perf.data` with archive of object files into `self.get_record_filename()`
         and `self.get_record_filename()`.tar.bz2 file in the working directory.
 
@@ -398,7 +393,6 @@ class Profiler:
         :return: `False` if can't collect samples. Otherwise `True`
         :rtype: bool
         """
-
         if not events:
             if self.build.run_machine.arch == general.Arch.RISCV:
                 events = ["cpu-clock", "cache-misses", "branch-misses"]
@@ -518,8 +512,7 @@ class Profiler:
         return True
 
     def perf_script(self, filename: str, working_directory: str) -> tuple[bool, str]:
-        """
-        Runs `perf script` on the provided perf data file and saves to `filename`.txt
+        """Run `perf script` on the provided perf data file and saves to `filename`.txt.
 
         :param filename: the name of perf record file.
         :type working_directory: str
@@ -531,7 +524,6 @@ class Profiler:
         :return: error code and perf script output file name
         :rtype: tuple[int,str]
         """
-
         self.ui.update_message(self.build.build_name, "Perf script processing...")
         error, _, stderr = self.shell.run(
             f"cd {working_directory}",
@@ -571,12 +563,12 @@ class Profiler:
 
     def save_stats(self):
         """Save collected statistics to a file.
+
         Merges with previous build statistics.
 
         Structure:
         {"build1":{"executable1": ProfileStats, "executable2": ...}, "build2": ...}
         """
-
         merged_stats = {self.build.build_name: self.stats}
 
         try:
@@ -592,22 +584,21 @@ class Profiler:
             pickle.dump(merged_stats, file)
 
     def get_record_filename(self, executable: str) -> str:
-        """Gets perf record output file name."""
-
+        """Get perf record output file name."""
         return (
             tools.build_filename(self.build.build_name, executable)
             + constants.PERF_RECORD_EXT
         )
 
     def get_archive_filename(self, executable: str) -> str:
-        """Gets perf archive file name."""
+        """Get perf archive file name."""
         return (
             tools.build_filename(self.build.build_name, executable)
             + constants.PERF_ARCHIVE_EXT
         )
 
     def get_script_filename(self, executable: str) -> str:
-        """Gets perf script file name."""
+        """Get perf script file name."""
         return (
             tools.build_filename(self.build.build_name, executable)
             + constants.PERF_SCRIPT_EXT

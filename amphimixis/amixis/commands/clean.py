@@ -14,7 +14,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "build_names",
         nargs="*",
@@ -29,25 +28,22 @@ def add_args(parser: ArgumentParser) -> None:
 
 
 def open_alternate_term() -> None:
-    """Uses Xterm control code to switch to an alternate terminal buffer"""
-
+    """Switch to the alternate terminal buffer using Xterm control codes."""
     print("\033[?1049h", end="")
 
 
 def close_alternate_term() -> None:
-    """Uses Xterm control code to return back to first terminal buffer"""
-
+    """Return to the primary terminal buffer using Xterm control codes."""
     print("\033[?1049l", end="")
 
 
 def clean(*builds: Build) -> bool:
-    """Clean builds directories
+    """Clean builds directories.
 
     :param Build builds: variable number of Build objects to clean
     :return: True if all specified builds were cleaned successfully, False otherwise
     :rtype: bool
     """
-
     project: Project
     try:
         project = tools.get_cache_project()
@@ -62,12 +58,11 @@ def clean(*builds: Build) -> bool:
 
 
 def interactive_clean() -> bool:
-    """Enumerate builds names and suggest choose which will be cleaned
+    """Enumerate builds names and suggest choose which will be cleaned.
 
     :return: True if all selected builds were cleaned successfully, False otherwise
     :rtype: bool
     """
-
     builds: dict[str, Build] = {}
     project: Project
     try:
@@ -107,7 +102,6 @@ def run_clean(args: Namespace) -> bool:
     :return: True if command succeeded, False otherwise
     :rtype: bool
     """
-
     builds_dict: dict[str, Build] = {}
     try:
         with open(Builder.BUILDS_LIST_FILE_NAME, "rb") as f:

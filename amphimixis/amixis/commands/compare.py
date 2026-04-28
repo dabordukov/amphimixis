@@ -15,7 +15,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     add_events_arg(parser)
     parser.add_argument(
         "file1",
@@ -44,8 +43,9 @@ def run_compare(
     max_rows: int,
     ui: IUI = NULL_UI,
 ) -> bool:
-    """Compare two perf output files and print the top `max_rows` symbols
-    with the most significant changes for specified events.
+    """Compare two perf output files.
+
+    Print the top `max_rows` symbols with the most significant changes for specified events.
 
     :param str file1: Scriptout filepath for comparison
     :param str file2: Scriptout filepath for comparison
@@ -55,7 +55,6 @@ def run_compare(
     :return: True if command succeeded, False otherwise
     :rtype: bool
     """
-
     if not path.isfile(file1):
         ui.mark_failed(f"File not found: {file1}")
         return False

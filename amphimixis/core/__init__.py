@@ -1,4 +1,4 @@
-"""Core module that contains director with main API and modules that he uses"""
+"""Core module that contains director with main API and modules that he uses."""
 
 from amphimixis.core import general
 from amphimixis.core.analyzer import analyze

@@ -48,7 +48,6 @@ class Shell:
 
     def connect(self) -> Self:
         """Connect to the shell of the machine."""
-
         if self.machine.address is None:
             self._create_local_shell()
         else:
@@ -99,12 +98,12 @@ class Shell:
         :param str *commands: commands to be executed
 
         :rtype: Tuple[int, List[List[str]], List[List[str]]]
-        :return: A tuple of three :\n
+        :return: A tuple of three :
+
             - :int: error code of the last executed command
             - :List[List[str]]: List[str] is lines of the stdout of an executed command.
             - :List[List[str]]: List[str] is lines of the stderr of an executed command.
         """
-
         stdout: list[list[str]] = []
         stderr: list[list[str]] = []
         error_code = 0
@@ -187,7 +186,7 @@ class Shell:
         return self._copy(source, _destination)
 
     def copy_to_host(self, source: str, destination: str) -> bool:
-        """Gets a file or folder from the target machine.
+        """Get a file or folder from the target machine.
 
         Absolute paths are needed.
 
@@ -196,7 +195,6 @@ class Shell:
 
         :return: True if successfully copied else False
         """
-
         if self.machine.auth is None:
             _source = source
         else:
@@ -205,15 +203,14 @@ class Shell:
         return self._copy(_source, destination)
 
     def get_project_workdir(self) -> str:
-        """Gets a working directory for amphimixis.
+        """Get a working directory for amphimixis.
 
         :rtype: str
         :return: In case of remote machine:
-                 expanded `~/${AMPHIMIXIS_DIRECTORY_NAME}/${PROJECT_NAME}_builds`.\n
+                 expanded `~/${AMPHIMIXIS_DIRECTORY_NAME}/${PROJECT_NAME}_builds`.
 
                  In case of local machine: python process current working directory.
         """
-
         if self._project_workdir != "":
             return self._project_workdir
 
@@ -233,12 +230,11 @@ class Shell:
         return self._project_workdir
 
     def get_home(self) -> str:
-        """Gets a home directory for current connection (user@machine).
+        """Get a home directory for current connection (user@machine).
 
         :rtype: str
         :return: Expanded `~` for the current connection (user@machine).
         """
-
         if self._homedir != "":
             return self._homedir
 
@@ -278,13 +274,14 @@ class Shell:
         return self._homedir
 
     def get_source_dir(self) -> str:
-        """Gets a directory for the project source code on the target machine.
+        """Get a directory for the project source code on the target machine.
 
         :rtype: str
         :return: In case of remote machine: expanded
-        `~/${AMPHIMIXIS_DIRECTORY_NAME}/${PROJECT_NAME}`.\n
-                 In case of local machine: project path."""
+        `~/${AMPHIMIXIS_DIRECTORY_NAME}/${PROJECT_NAME}`.
 
+                 In case of local machine: project path.
+        """
         if self._is_local:
             return self.project.path
 
@@ -295,17 +292,17 @@ class Shell:
         )
 
     def set_paranoid(self, level: int) -> tuple[int, bool]:
-        """Sets perf_event_paranoid to the given level.
+        """Set perf_event_paranoid to the given level.
 
         :param int level: The level to set perf_event_paranoid to.
                           Should be an integer between -1 and 3.
 
-        :return: A tuple of two elements: \n
+        :rtype: tuple[int, bool]
+        :return: A tuple of two elements:
+
             - int: The current level of perf_event_paranoid.
             - bool: True if the level was set successfully, False otherwise.
-        :rtype: tuple[int, bool]
         """
-
         if not self._is_connected:
             self.connect()
 

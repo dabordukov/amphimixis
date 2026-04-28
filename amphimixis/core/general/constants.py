@@ -1,4 +1,4 @@
-"""Amphimixis constants"""
+"""Amphimixis constants."""
 
 from pathlib import Path
 

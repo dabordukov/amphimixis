@@ -28,7 +28,6 @@ def run_add_toolchain() -> bool:
     :return: True if toolchain added successfully, False otherwise.
     :rtype: bool
     """
-
     editor = os.environ.get("EDITOR", "nano")
     current_content = TOOLCHAIN_TEMPLATE
 
@@ -128,7 +127,6 @@ def _validate_toolchain_yaml(content: str) -> None | dict:
     :return: Dictionary if valid, None otherwise
     :rtype: None | dict
     """
-
     try:
         toolchain = yaml.safe_load(content)
     except yaml.YAMLError as e:
@@ -156,7 +154,6 @@ def _check_toolchain_exists(toolchain_name: str) -> bool:
     :return: True if exists, False otherwise
     :rtype: bool
     """
-
     if LaboratoryAssistant.find_toolchain_by_name(toolchain_name) is not None:
         print(f"\nWarning: Toolchain '{toolchain_name}' already exists.")
         print("Not overwriting. Please choose a different name.")
@@ -172,7 +169,6 @@ def _get_name(data: dict) -> str | None:
     :return: Validated name string, or None if invalid
     :rtype: str | None
     """
-
     name = data.get("name")
     if not name or not isinstance(name, str) or not name.strip():
         print("Error: 'name' field is required and must be a non-empty string.")
@@ -187,7 +183,6 @@ def _get_target_arch_str(data: dict) -> str | None:
     :return: Validated target architecture string, or None if missing
     :rtype: str | None
     """
-
     target_arch = data.get("target_arch")
     if not target_arch:
         print("Error: 'target_arch' field is required.")
@@ -202,7 +197,6 @@ def _get_platform(data: dict) -> str | None:
     :return: Validated platform name string, or None if missing
     :rtype: str | None
     """
-
     platform = data.get("platform")
     if not platform:
         print("Error: 'platform' field is required.")

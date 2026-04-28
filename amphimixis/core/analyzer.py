@@ -1,4 +1,4 @@
-"""Module that analyzes project's repository and creates file with its information"""
+"""Module that analyzes project's repository and creates file with its information."""
 
 import glob
 import re
@@ -24,8 +24,7 @@ build_systems_list = {
 
 
 def analyze(project: general.Project):
-    """Analyzes project and collects its information"""
-
+    """Analyzes project and collects its information."""
     results: dict[str, list[str] | str | None] = {
         "tests": [],
         "benchmarks": [],

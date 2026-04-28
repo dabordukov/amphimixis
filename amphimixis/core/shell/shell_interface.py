@@ -1,4 +1,4 @@
-"""Shell handler interface"""
+"""Shell handler interface."""
 
 from abc import ABC, abstractmethod
 

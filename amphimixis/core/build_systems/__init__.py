@@ -1,4 +1,4 @@
-"""Module containing dictionary of build systems and implementations of build systems"""
+"""Module containing dictionary of build systems and implementations of build systems."""
 
 from amphimixis.core.build_systems.build_systems import build_systems_dict, runners_dict
 from amphimixis.core.build_systems.cmake import CMake

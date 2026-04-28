@@ -1,4 +1,4 @@
-"""The common module that is used in most other modules"""
+"""The common module that is used in most other modules."""
 
 import os
 import queue
@@ -9,7 +9,7 @@ from os.path import isabs
 
 
 class Arch(StrEnum):
-    """Supported architectures"""
+    """Supported architectures."""
 
     X86 = "x86"
     RISCV = "riscv"
@@ -19,7 +19,7 @@ class Arch(StrEnum):
 # pylint: disable=too-many-instance-attributes
 @dataclass
 class ProfileStats:
-    """Profiling and execution statistics for an executable
+    """Profiling and execution statistics for an executable.
 
     :var str | None build_name: Name of the build.
     :var str | None executable: Path to the executable file (relative to build dir).
@@ -50,7 +50,7 @@ ProjectStats = dict[str, dict[str, ProfileStats]]
 
 @dataclass
 class MachineAuthenticationInfo:
-    """Information about authentication on a remote machine
+    """Information about authentication on a remote machine.
 
     :var str username: Username for authentication.
     :var str | None password: Password for authentication.
@@ -65,6 +65,7 @@ class MachineAuthenticationInfo:
 
     @property
     def __dictstr__(self) -> dict[str, str]:
+        """Return a dictionary representation with string-serializable values."""
         ret = {"username": self.username}
         if self.password is not None:
             ret["password"] = self.password
@@ -74,7 +75,7 @@ class MachineAuthenticationInfo:
 
 @dataclass
 class MachineInfo:
-    """Information about the machine
+    """Information about the machine.
 
     :var Arch arch: Architecture of the machine.
     :var str | None address: IP address or hostname of the remote machine.
@@ -89,6 +90,7 @@ class MachineInfo:
 
     @property
     def __dictstr__(self) -> dict:
+        """Return a dictionary representation with string-serializable values."""
         ret: dict[str, str | dict] = {"arch": self.arch.value}
         if self.address is not None:
             ret["address"] = self.address
@@ -99,7 +101,7 @@ class MachineInfo:
 
 # pylint: disable = too-many-instance-attributes
 class CompilerFlagsAttrs(StrEnum):
-    """Enumeration for getting access to flags of concrete compiler"""
+    """Enumeration for getting access to flags of concrete compiler."""
 
     C_FLAGS = "c_flags"
     CXX_FLAGS = "cxx_flags"
@@ -120,7 +122,7 @@ class CompilerFlagsAttrs(StrEnum):
 
 # pylint: disable = too-many-instance-attributes
 class ToolchainAttrs(StrEnum):
-    """Constants for getting access to attributes from toolchain dictionary"""
+    """Constants for getting access to attributes from toolchain dictionary."""
 
     # TOOLS: postfix "_t" means "tool"
     AR_T = "ar"
@@ -152,7 +154,7 @@ class ToolchainAttrs(StrEnum):
 
 
 class Toolchain:
-    """Class that generalized idea of toolchain"""
+    """Class that generalized idea of toolchain."""
 
     def __init__(self, name: str | None = None, sysroot: str | None = None):
         # attr -> [ /path/to/any | compiler_defualt_flags ]
@@ -162,17 +164,17 @@ class Toolchain:
 
     @property
     def name(self) -> str | None:
-        """Name of toolchain getter"""
+        """Name of toolchain getter."""
         return self.__name
 
     @property
     def sysroot(self) -> str | None:
-        """Sysroot of toolchain getter"""
+        """Sysroot of toolchain getter."""
         return self.__sysroot
 
     @sysroot.setter
     def sysroot(self, new_path: None | str) -> None:
-        """Sysroot of toolchain setter"""
+        """Sysroot of toolchain setter."""
         if new_path is None or isabs(new_path):
             self.__sysroot = new_path
         else:
@@ -181,11 +183,11 @@ class Toolchain:
             )
 
     def get(self, attr: ToolchainAttrs | CompilerFlagsAttrs) -> str | None:
-        """Getter of toolchain attributes"""
+        """Getter of toolchain attributes."""
         return self.__attrs.get(attr.value)
 
     def set(self, attr: ToolchainAttrs | CompilerFlagsAttrs, new_value: str) -> None:
-        """Setter of toolchain attributes
+        """Setter of toolchain attributes.
 
         :param ToolchainAttrs | CompilerFlagsAttrs attr: Tool / compiler / flags
             attribute of toolchain
@@ -199,33 +201,33 @@ class Toolchain:
 
     @property
     def data(self) -> dict[str, str]:
-        """Return dictionary with all tools"""
+        """Return dictionary with all tools."""
         return self.__attrs
 
 
 class CompilerFlags:
-    """Storing flags of compilers"""
+    """Storing flags of compilers."""
 
     def __init__(self) -> None:
         self.__attrs: dict[CompilerFlagsAttrs, str] = {}  # attr -> compiler_flags
 
     def get(self, attr: CompilerFlagsAttrs) -> str | None:
-        """Getter of compiler flags"""
+        """Getter of compiler flags."""
         return self.__attrs.get(attr)
 
     def set(self, attr: CompilerFlagsAttrs, new_value: str) -> None:
-        """Setter of compiler flags"""
+        """Setter of compiler flags."""
         self.__attrs[attr] = new_value
 
     @property
     def data(self) -> dict[CompilerFlagsAttrs, str]:
-        """Return dictionary with all tools"""
+        """Return dictionary with all tools."""
         return self.__attrs
 
 
 # pylint: disable=too-few-public-methods
 class IUI(ABC):
-    """Interface for User Interface (UI) classes"""
+    """Interface for User Interface (UI) classes."""
 
     @abstractmethod
     def step(self) -> None:
@@ -233,28 +235,31 @@ class IUI(ABC):
 
     @abstractmethod
     def send_message(self, sender: str, message: str) -> None:
-        """Send message to user
+        """Send message to user.
 
         :param str sender: Identifier name of sender module
-        :param str message: Message to user"""
+        :param str message: Message to user
+        """
 
     @abstractmethod
     def send_warning(self, sender: str, warning: str) -> None:
-        """Send warning to user
+        """Send warning to user.
 
         :param str sender: Identifier name of sender module
-        :param str warning: Warning to user"""
+        :param str warning: Warning to user
+        """
 
     @abstractmethod
     def send_error(self, sender: str, err_msg: str) -> None:
-        """Send error message to user
+        """Send error message to user.
 
         :param str sender: Identifier name of sender module
-        :param str error: Error message to user"""
+        :param str error: Error message to user
+        """
 
     @abstractmethod
     def update_message(self, build_id: str, message: str) -> None:
-        """Update message for specific build
+        """Update message for specific build.
 
         :param str build_id: Build identifier
         :param str message: Message to store
@@ -277,8 +282,8 @@ class IUI(ABC):
         """
 
 
-class NullUI(IUI):
-    """A UI implementation that does nothing (used to suppress output)"""
+class _nullUI(IUI):
+    """A UI implementation that does nothing (used to suppress output)."""
 
     def step(self) -> None:
         pass
@@ -302,12 +307,12 @@ class NullUI(IUI):
         pass
 
 
-NULL_UI = NullUI()
+NULL_UI = _nullUI()
 
 
 # pylint: disable=too-few-public-methods
 class ILowLevelBuildSystem(ABC):
-    """Interface for classes implementing interaction with runner (low-level build-system)"""
+    """Interface for classes implementing interaction with runner (low-level build-system)."""
 
     @abstractmethod
     def __init__(self, project: "Project", ui: IUI):
@@ -315,12 +320,15 @@ class ILowLevelBuildSystem(ABC):
 
     @abstractmethod
     def run_building(self, build: "Build") -> tuple[int, str, str]:
-        """Run building via build system"""
+        """Run building via build system."""
 
 
 # pylint: disable=too-few-public-methods
 class IHighLevelBuildSystem(ABC):
-    """Interface for classes implementing interaction with build system (high-level build-system)"""
+    """Interface for classes implementing interaction with a build system.
+
+    Represents a high-level build system abstraction.
+    """
 
     @abstractmethod
     def __init__(
@@ -333,11 +341,11 @@ class IHighLevelBuildSystem(ABC):
 
     @abstractmethod
     def build(self, build: "Build") -> tuple[int, str, str]:
-        """Build via build system"""
+        """Build via build system."""
 
 
-class DummyRunner(ILowLevelBuildSystem):
-    """Runner that does nothing"""
+class _dummyRunner(ILowLevelBuildSystem):
+    """Runner that does nothing."""
 
     def __init__(self):
         pass
@@ -346,27 +354,27 @@ class DummyRunner(ILowLevelBuildSystem):
         return (0, "", "")
 
 
-DUMMY_RUNNER = DummyRunner()
+DUMMY_RUNNER = _dummyRunner()
 
 
 # pylint: disable=too-few-public-methods
-class DummyBuildSystem(IHighLevelBuildSystem):
-    """Build system that does nothing"""
+class _dummyBuildSystem(IHighLevelBuildSystem):
+    """Build system that does nothing."""
 
     def __init__(self):
         pass
 
     def build(self, build: "Build") -> tuple[int, str, str]:
-        """Build via build system"""
+        """Build via build system."""
         return (0, "", "")
 
 
-DUMMY_BUILD_SYSTEM = DummyBuildSystem()
+DUMMY_BUILD_SYSTEM = _dummyBuildSystem()
 
 
 # pylint: disable=too-few-public-methods
 class BuildSystem:
-    """Common class for build systems"""
+    """Common class for build systems."""
 
     _MAX_DEPTH = 3
 
@@ -382,9 +390,10 @@ class BuildSystem:
 
     def find_relative_path(self, file_name: str) -> str:
         """Find first directory that contains 'file_name' relative to project root.
+
         :param str file_name: Name of file to search relative to project root.
         :rtype: str
-        :return: Path to directory that contains file relative to project root
+        :return: Path to directory that contains file relative to project root.
         """
         q_dirs: queue.Queue[tuple[str, int]] = queue.Queue()
         q_dirs.put((self._project.path, 0))
@@ -404,7 +413,7 @@ class BuildSystem:
 
 @dataclass
 class Build:
-    """Class with information about one build of project
+    """Class with information about one build of project.
 
     :var MachineInfo build_machine: Information about the machine to build at
     :var MachineInfo run_machine: Information about the machine to profile at
@@ -431,7 +440,7 @@ class Build:
 
 @dataclass
 class Project:
-    """Class with information about project and his builds
+    """Class with information about project and his builds.
 
     :var str path: Path to project for research.
     :var list[Build] builds: List of project configurations to be build.

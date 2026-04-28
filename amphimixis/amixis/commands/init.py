@@ -14,7 +14,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     parser.add_argument(
         "sample_name",
         type=str,
@@ -27,7 +26,6 @@ def run_init(sample: str | None) -> bool:
 
     :param str sample: Name of configuration file sample
     """
-
     samples_path = Path(__file__).parent / "../../samples"
     samples = [p.stem for p in samples_path.glob("*")]
     if sample not in samples:

@@ -1,4 +1,4 @@
-"""Single-line spinner for build progress display"""
+"""Single-line spinner for build progress display."""
 
 import sys
 
@@ -21,30 +21,27 @@ class ConsoleAnimationPrinter(IUI):
         self.status = "running"
 
     def send_message(self, sender: str, message: str) -> None:
-        """Print message to user with status mark 'I'
+        """Print message to user with status mark 'I'.
 
         :param str sender: Identifier name of sender module
         :param str message: Message to user
         """
-
         print(f"\r\033[K[{sender}][I] {message}")
 
     def send_warning(self, sender: str, warning: str) -> None:
-        """Print warning to user with status mark 'W' and 'WARNING: ' in begin of message
+        """Print warning to user with status mark 'W' and 'WARNING: ' in begin of message.
 
         :param str sender: Identifier name of sender module
         :param str warning: Warning to user
         """
-
         print(f"\r\033[K[{sender}][W] WARNING: {warning}")
 
     def send_error(self, sender: str, err_msg: str) -> None:
-        """Print error to user with status mark 'E' and 'ERROR: ' in begin of message
+        """Print error to user with status mark 'E' and 'ERROR: ' in begin of message.
 
         :param str sender: Identifier name of sender module
         :param str err_msg: Error message to user
         """
-
         print(f"\r\033[K[{sender}][E] ERROR: {err_msg}")
 
     def update_message(self, build_id: str, message: str) -> None:
@@ -53,7 +50,6 @@ class ConsoleAnimationPrinter(IUI):
         :param str build_id: Build identifier
         :param str message: Message describing current build phase
         """
-
         if self.build_id != build_id:
             self.status = "running"
             self.index = 0
@@ -64,7 +60,6 @@ class ConsoleAnimationPrinter(IUI):
 
     def step(self) -> None:
         """Move to next spinner."""
-
         self.index = (self.index + 1) % len(self.braille)
         self.draw()
 
@@ -74,7 +69,6 @@ class ConsoleAnimationPrinter(IUI):
         :param str message: message to display. If empty, leaves the previous message
         :param str build_id: Build identifier. If empty, leaves the previous identifier
         """
-
         self.status = "success"
         if build_id:
             self.build_id = build_id
@@ -91,7 +85,6 @@ class ConsoleAnimationPrinter(IUI):
         :param str error_message: Message for failed build (if empty, keep previous)
         :param str build_id: Build identifier. If empty, leaves the previous identifier
         """
-
         self.status = "failed"
 
         if build_id:
@@ -105,7 +98,6 @@ class ConsoleAnimationPrinter(IUI):
 
     def draw(self) -> None:
         """Draw current state to stdout."""
-
         if self.status == "success":
             symbol = "✓"
         elif self.status == "failed":
@@ -118,6 +110,5 @@ class ConsoleAnimationPrinter(IUI):
 
     def finalize(self) -> None:
         """Move to next line."""
-
         sys.stdout.write("\n")
         sys.stdout.flush()

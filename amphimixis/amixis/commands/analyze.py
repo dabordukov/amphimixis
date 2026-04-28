@@ -15,7 +15,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     add_path_arg(parser)
     add_config_arg(parser)
 
@@ -28,7 +27,6 @@ def run_analyze(project: Project, ui: IUI = NULL_UI) -> bool:
     :return: True if analysis succeeded, False otherwise
     :rtype: bool
     """
-
     project_name = path.basename(path.normpath(project.path))
     ui.update_message(project_name, "Analyzing project...")
 

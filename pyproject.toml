@@ -54,8 +54,11 @@ amixis = "amphimixis.amixis.__main__:main"
 
 [tool.ruff.lint]
 ignore = [
-    "E501",  # Ignore line length warnings,
-    "SIM102" # Ignore "Use a single `if` instead of nested"
+    "E501",   # Ignore line length warnings,
+    "SIM102", # Ignore "Use a single `if` instead of nested"
+    "D107",   # Ignore missing docstring in __init__()
+    "D203",   # Ignore 1 blank line required before class docstring
+    "D213",   # Ignore Multi-line docstring summary should start at the second line
 ]
 select = [
     "E",   # pycodestyle
@@ -65,6 +68,7 @@ select = [
     "SIM", # simplify code
     "C4",  # comprehensions
     "B",   # bugbear
+    "D",   # docstring (PEP 257)
 ]
 
 [tool.ruff]

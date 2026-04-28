@@ -1,4 +1,4 @@
-"""Module working with Make build system"""
+"""Module working with Make build system."""
 
 import os
 
@@ -17,7 +17,7 @@ _logger = logger.setup_logger("MAKE")
 
 
 class Make(BuildSystem, IHighLevelBuildSystem, ILowLevelBuildSystem):
-    """Implementation of working with Make build system"""
+    """Implementation of working with Make build system."""
 
     _GNU_standard_compatibility_warn_msg = (
         "Amphimixis only uses GNU standard flags for Makefile, "
@@ -110,11 +110,12 @@ class Make(BuildSystem, IHighLevelBuildSystem, ILowLevelBuildSystem):
         return (err, "".join(stdout[0]), "".join(stderr[0]))
 
     def build(self, build: Build) -> tuple[int, str, str]:
-        """Build via Make
+        """Build via Make.
 
         :param Build build: Build to build
         :rtype: tuple[int, str, str]
-        :return: Tuple of error_code, stdout, stderr"""
+        :return: Tuple of error_code, stdout, stderr
+        """
         self._ui.send_warning(
             build.build_name,
             Make._GNU_standard_compatibility_warn_msg,
@@ -124,8 +125,9 @@ class Make(BuildSystem, IHighLevelBuildSystem, ILowLevelBuildSystem):
         return self._build_install_clean(build, configure=True)
 
     def run_building(self, build: Build) -> tuple[int, str, str]:
-        """Run building via Make
+        """Run building via Make.
 
         :param Build build: Build to run building
-        :return: Tuple of error code, stdout and stderr"""
+        :return: Tuple of error code, stdout and stderr
+        """
         return self._build_install_clean(build)

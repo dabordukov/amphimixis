@@ -1,5 +1,5 @@
-"""
-### CLI module
+"""### CLI module.
+
 #### Entry point:
 - `__main__`
 #### Main pipelines:
@@ -7,5 +7,5 @@
 - `commands.analyze.run_analyze`
 - `commands.build.run_build`
 - `commands.profile.run_profile`
-- `commands.compare.run_compare`
+- `commands.compare.run_compare`.
 """

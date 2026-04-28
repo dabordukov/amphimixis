@@ -1,4 +1,4 @@
-"""Shell module"""
+"""Shell module."""
 
 from amphimixis.core.shell.shell import Shell
 

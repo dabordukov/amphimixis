@@ -22,7 +22,6 @@ def build_filename(build_name: str, executable: str) -> str:
     :return: Filename in ``<escaped-build>..<escaped-executable>`` form.
     :rtype: str
     """
-
     escaped_build = escape_filename_part(build_name)
     escaped_executable = escape_filename_part(os.path.normpath(executable))
     return f"{escaped_build}..{escaped_executable}"
@@ -36,7 +35,6 @@ def parse_filename(filename: str) -> tuple[str, str]:
     :rtype: tuple[str, str]
     :raises ValueError: If `filename` does not contain the expected separator.
     """
-
     separator = filename.find("..")
     if separator == -1:
         raise ValueError(f"Invalid perf record filename: {filename}")
@@ -57,7 +55,6 @@ def escape_filename_part(value: str) -> str:
     :return: Encoded string safe to use inside generated filenames.
     :rtype: str
     """
-
     escaped = []
     for char in value:
         match char:
@@ -82,7 +79,6 @@ def unescape_filename_part(value: str) -> str:
     :rtype: str
     :raises ValueError: If `value` contains an invalid escape sequence.
     """
-
     decoded = []
     idx = 0
     while idx < len(value):
@@ -128,7 +124,7 @@ def project_name(project: Project):
 
 
 def get_cache_project() -> Project:
-    """Load Project object saved to first .project file"""
+    """Load Project object saved to first .project file."""
     project_file = glob.glob("./*.project")[0]
     with open(project_file, "rb") as file:
         project: Project = pickle.load(file)
@@ -158,7 +154,6 @@ def get_unique_path(base_path: Path) -> Path:
     :return: Unique path (existing or with -N suffix)
     :rtype: Path
     """
-
     if not base_path.exists():
         return base_path
     counter = 1

@@ -1,4 +1,4 @@
-"""Module working with Ninja build system"""
+"""Module working with Ninja build system."""
 
 import os
 
@@ -10,7 +10,7 @@ _logger = logger.setup_logger("NINJA")
 
 
 class Ninja(BuildSystem, ILowLevelBuildSystem):
-    """Implementation of working with Ninja build system"""
+    """Implementation of working with Ninja build system."""
 
     def run_building(self, build: Build) -> tuple[int, str, str]:
         """Run ninja in the build directory.

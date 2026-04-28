@@ -1,4 +1,4 @@
-"""Class that manages and provides toolchains, sysroots and platforms"""
+"""Class that manages and provides toolchains, sysroots and platforms."""
 
 from os import environ, makedirs
 from os.path import exists
@@ -36,7 +36,7 @@ _STD_INDENT = 4
 
 
 class LaboratoryAssistant:
-    """Manager of toolchains, sysroots and platforms in Amphimixis global config"""
+    """Manager of toolchains, sysroots and platforms in Amphimixis global config."""
 
     CONFIG_DIR_PATH = (
         f"{environ["HOME"]}/.config/amphimixis"
@@ -48,11 +48,11 @@ class LaboratoryAssistant:
 
     @staticmethod
     def parse_config_file() -> dict:
-        """Search ~/.config/amphimixis/toolbox.yml and parse or create it
+        """Search ~/.config/amphimixis/toolbox.yml and parse or create it.
 
         :rtype: dict
-        :return: Toolbox content from Amphimixis global config"""
-
+        :return: Toolbox content from Amphimixis global config
+        """
         template: dict[str, dict] = {
             _PLATFORMS: {},
             _TOOLCHAINS: {},
@@ -84,11 +84,12 @@ class LaboratoryAssistant:
 
     @staticmethod
     def find_platform(platform_name: str) -> MachineInfo | None:
-        """Find platform in Amphimixis global config (toolbox) by name
+        """Find platform in Amphimixis global config (toolbox) by name.
 
         :param str platform_name: Name of platform
         :rtype: MachineInfo | None
-        :return: info about machine if found else None"""
+        :return: info about machine if found else None
+        """
         _toolbox = LaboratoryAssistant.parse_config_file()
         if platform_name in _toolbox[_PLATFORMS]:
             machine = _toolbox[_PLATFORMS][platform_name]
@@ -108,11 +109,12 @@ class LaboratoryAssistant:
 
     @staticmethod
     def find_platform_by_address(address: str) -> str:
-        """Find platform in Amphimixis global config (toolbox) by address
+        """Find platform in Amphimixis global config (toolbox) by address.
 
         :param str address: Address of platform in network
         :rtype: str
-        :return: platform name if platform exists else empty string"""
+        :return: platform name if platform exists else empty string
+        """
         _toolbox = LaboratoryAssistant.parse_config_file()
         for name, machine in _toolbox[_PLATFORMS].items():
             if machine.get(_ADDRESS, None) == address:
@@ -121,12 +123,13 @@ class LaboratoryAssistant:
 
     @staticmethod
     def add_platform(name: str, machine: MachineInfo) -> bool:
-        """Add platform to Amphimixis global config (toolbox)
+        """Add platform to Amphimixis global config (toolbox).
 
         :param str name: Name of platform
         :param MachineInfo machine: Information about machine to write to global config
         :rtype: bool
-        :return: True if platform successfully added to global config"""
+        :return: True if platform successfully added to global config
+        """
         _toolbox = LaboratoryAssistant.parse_config_file()
         _toolbox[_PLATFORMS][name] = machine.__dictstr__
         try:
@@ -138,21 +141,22 @@ class LaboratoryAssistant:
 
     @staticmethod
     def delete_platform(name: str) -> None:
-        """Delete platform from Amphimixis global config by name
+        """Delete platform from Amphimixis global config by name.
 
-        :param str name: Name of platform"""
+        :param str name: Name of platform
+        """
         toolbox = LaboratoryAssistant.parse_config_file()
         toolbox[_PLATFORMS].pop(name)
 
     @staticmethod
     def find_toolchain_by_name(name: str) -> Toolchain | None:
-        """Find toolchain by name in global config
+        """Find toolchain by name in global config.
 
         :param str name: name of toolchain in global config
         :rtype: Toolchain | None
         :return: Toolchain constructed from Amphimixis global config found by name
-        if not found then return None"""
-
+        if not found then return None
+        """
         toolbox: dict = LaboratoryAssistant.parse_config_file()
         if name in toolbox[_TOOLCHAINS]:
             d_toolchain: dict = toolbox[_TOOLCHAINS][name]
@@ -172,13 +176,14 @@ class LaboratoryAssistant:
         machine: MachineInfo | str,
         target_arch: Arch,
     ) -> bool:
-        """Add toolchain to Amphimixis global config (toolbox)
+        """Add toolchain to Amphimixis global config (toolbox).
 
         :param Toolchain toolchain: Toolchain to adding
         :param MachineInfo | str machine: Platform that contains toolchain
         :param Arch target_arch: The architecture for that the toolchain generates code
         :rtype: bool
-        :return: True if toolchain successfully added to global config"""
+        :return: True if toolchain successfully added to global config
+        """
         if not toolchain.data:
             return False
 
@@ -212,8 +217,9 @@ class LaboratoryAssistant:
 
     @staticmethod
     def delete_toolchain(name: str) -> None:
-        """Delete toolchain from Amphimixis global config by name
+        """Delete toolchain from Amphimixis global config by name.
 
-        :param str name: Name of toolchain"""
+        :param str name: Name of toolchain
+        """
         toolbox = LaboratoryAssistant.parse_config_file()
         toolbox[_TOOLCHAINS].pop(name)

@@ -13,7 +13,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     subparsers = parser.add_subparsers(dest="add_subcommand", title="add options")
     subparsers.required = True
 
@@ -35,7 +34,6 @@ def run_add(args: Namespace) -> bool:
     :return: True if command succeeded, False otherwise
     :rtype: bool
     """
-
     add_subcommand = args.add_subcommand
 
     if add_subcommand == "input":

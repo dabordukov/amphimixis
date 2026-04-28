@@ -24,7 +24,6 @@ def run_add_input() -> bool:
     :return: True if configuration saved successfully, False otherwise
     :rtype: bool
     """
-
     base_path = DEFAULT_CONFIG_PATH
     editor = os.environ.get("EDITOR", "nano")
     current_content = CONFIG_TEMPLATE
@@ -58,7 +57,6 @@ def _validate_config(temp_path: Path) -> bool:
     :return: True if valid, False otherwise
     :rtype: bool
     """
-
     try:
         return validate(str(temp_path))
     except yaml.YAMLError as e:
@@ -75,7 +73,6 @@ def _save_config(temp_path: Path, config_path: Path) -> bool:
     :return: True if saved successfully, False otherwise
     :rtype: bool
     """
-
     try:
         shutil.move(str(temp_path), str(config_path))
     except OSError as e:

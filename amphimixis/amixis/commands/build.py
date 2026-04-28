@@ -14,7 +14,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     add_path_arg(parser)
     add_config_arg(parser)
 
@@ -28,7 +27,6 @@ def run_build(project: Project, config_file_path: str, ui: IUI = NULL_UI) -> boo
     :return: True if at least one build succeeded, False otherwise
     :rtype: bool
     """
-
     if not project.builds and not parse_config(
         project, config_file_path=config_file_path, ui=ui
     ):

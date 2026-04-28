@@ -16,7 +16,6 @@ def add_args(parser: ArgumentParser) -> None:
 
     :param ArgumentParser parser: subcommand parser to which arguments are added
     """
-
     add_path_arg(parser)
     add_config_arg(parser)
     add_events_arg(parser)
@@ -27,7 +26,6 @@ def show_profiling_result(project: Project) -> None:
 
     :param Project project: Project instance with profiling results
     """
-
     obj: ProjectStats = tools.load_project_stats(project)
 
     if not obj or not any(
@@ -96,7 +94,6 @@ def run_full_pipeline(
     :return: True if pipeline succeeded, False otherwise
     :rtype: bool
     """
-
     if not run_analyze(project, ui):
         return False
 

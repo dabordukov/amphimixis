@@ -15,7 +15,7 @@ from amphimixis.core.general import tools
 
 # pylint: disable=too-few-public-methods
 class LLMAnalyzer:
-    """An OpenAI API wrapper"""
+    """An OpenAI API wrapper."""
 
     def __init__(self, api_key=None, base_url=None, model_name=None, project=None):
         self.api_key = api_key or os.getenv("LLM_API_KEY")
@@ -30,10 +30,7 @@ class LLMAnalyzer:
         )
 
     def ask(self, system_prompt, user_prompt, temperature=0.2):
-        """
-        Send a prompt to the LLM and return the response.
-        """
-
+        """Send a prompt to the LLM and return the response."""
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -130,7 +127,6 @@ TOTAL_MARGINS = INNER_BORDERS * BUILD_TEXT_MARGINS
 
 def _get_terminal_width(default: int = 80) -> int:
     """Return terminal width or a fallback value if it cannot be detected."""
-
     return shutil.get_terminal_size(fallback=(default, 24)).columns
 
 
@@ -138,8 +134,7 @@ def _get_terminal_width(default: int = 80) -> int:
 def print_comparison_table(
     event_name, data_a, data_b, max_rows, build_a="Build A", build_b="Build B"
 ):
-    """Prints statistics comparison for a specific event."""
-
+    """Print statistics comparison for a specific event."""
     merged = _get_comparison_data(data_a, data_b, max_rows)
 
     result = merged.reindex(merged.delta.abs().sort_values(ascending=False).index).head(
@@ -261,8 +256,9 @@ def _get_build_data(filename: str) -> str:
 
 
 def analyze_with_llm(table, samples_a, samples_b):
-    """
-    Analyzes performance data using a Large Language Model (LLM) and saves the output to a file.
+    """Analyze performance data using a Large Language Model (LLM).
+
+    Save the output to a file.
     """
     analyzer = LLMAnalyzer()
     system_prompt = (
@@ -305,9 +301,9 @@ def main(
     max_rows=20,
     use_llm=False,
 ) -> int:
-    """
-    Compares two perf output files and prints the top `max_rows`
-    symbols with the most significant changes for specified events.
+    """Compare two perf output files and print the top `max_rows` symbols.
+
+    Print symbols with the most significant changes for specified events.
 
     :param str filename1: path to baseline build perfdata.scriptout
     :param str filename2: path to another build perfdata.scriptout
@@ -315,7 +311,6 @@ def main(
     :param int max_rows: maximum symbols to print per event
     :param bool use_llm: use LLM
     """
-
     build_a = _get_build_data(filename1)
     build_b = _get_build_data(filename2)
 
