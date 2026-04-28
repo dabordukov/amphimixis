@@ -33,10 +33,10 @@ class _LocalShellHandler(IShellHandler):
         cmd_bytes = command.encode("UTF-8")
 
         if self.shell.stdin.write(cmd_bytes) != len(cmd_bytes):
-            raise IOError("Not all data has been written")
+            raise OSError("Not all data has been written")
 
         if self.shell.stdin.write(b"\n") != 1:
-            raise IOError("Not all data has been written")
+            raise OSError("Not all data has been written")
 
         self.shell.stdin.flush()
 

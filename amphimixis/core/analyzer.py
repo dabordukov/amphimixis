@@ -150,7 +150,7 @@ def _cmake_dependencies(proj_path, results):
         _logger.info("  no CMakeLists.txt in project root")
         return
 
-    with open(file_path, "r", encoding="utf8") as file:
+    with open(file_path, encoding="utf8") as file:
         text = file.read()
 
     text = re.sub(r"#.*", "", text)

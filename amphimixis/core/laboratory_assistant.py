@@ -62,7 +62,6 @@ class LaboratoryAssistant:
         if exists(f"{LaboratoryAssistant.TOOLBOX_PATH}"):
             with open(
                 f"{LaboratoryAssistant.TOOLBOX_PATH}",
-                "r",
                 encoding="utf-8",
             ) as f_toolbox:
                 _toolbox = yaml.safe_load(f_toolbox) or {}

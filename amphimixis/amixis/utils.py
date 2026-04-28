@@ -94,7 +94,7 @@ def read_file_content(temp_path: Path) -> str | None:
     """
 
     try:
-        with open(temp_path, "r", encoding="utf-8") as f:
+        with open(temp_path, encoding="utf-8") as f:
             return f.read()
     except OSError as e:
         print(f"Error reading file: {e}")

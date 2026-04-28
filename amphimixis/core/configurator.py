@@ -58,7 +58,7 @@ def parse_config(
         ui.mark_failed("Incorrect input file")
         return False
 
-    with open(config_file_path, "r", encoding="UTF-8") as file:
+    with open(config_file_path, encoding="UTF-8") as file:
         input_config = yaml.safe_load(file)
 
     build_system: str | None = str(input_config.get("build_system")).lower()
@@ -246,7 +246,7 @@ def _get_analyzed_build_system() -> str | None:
         _logger.warning("Analyzer output file not found")
         return None
 
-    with open(ANALYZED_FILE_NAME, "r", encoding="UTF-8") as file:
+    with open(ANALYZED_FILE_NAME, encoding="UTF-8") as file:
         analyzed = yaml.safe_load(file)
 
     if not analyzed:

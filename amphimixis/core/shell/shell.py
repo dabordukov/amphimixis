@@ -5,7 +5,7 @@ import socket
 import subprocess
 import threading
 from ctypes import ArgumentError
-from typing import List, Self, Tuple
+from typing import Self
 
 from amphimixis.core import logger
 from amphimixis.core.general import IUI, MachineInfo, NullUI, Project, constants
@@ -88,7 +88,7 @@ class Shell:
         self._shell = _ParamikoHandler(self.machine, self.connect_timeout)
         self._is_local = False
 
-    def run(self, *commands: str) -> Tuple[int, List[List[str]], List[List[str]]]:
+    def run(self, *commands: str) -> tuple[int, list[list[str]], list[list[str]]]:
         """Run the commands through the shell.
 
         - Execute commands one by one until:
@@ -105,8 +105,8 @@ class Shell:
             - :List[List[str]]: List[str] is lines of the stderr of an executed command.
         """
 
-        stdout: List[List[str]] = []
-        stderr: List[List[str]] = []
+        stdout: list[list[str]] = []
+        stderr: list[list[str]] = []
         error_code = 0
         for cmd in commands:
             if error_code:
@@ -120,9 +120,9 @@ class Shell:
             # newline added in case of it is missing in the previous output line
             self._shell.run(f'echo "\n{_READING_BARRIER_FLAG}:$?"')
             self._shell.run(f'echo "\n{_READING_BARRIER_FLAG}">&2')
-            cmd_stdout: List[str] = []
-            cmd_stderr: List[str] = []
-            command_error_code: List[int] = []
+            cmd_stdout: list[str] = []
+            cmd_stderr: list[str] = []
+            command_error_code: list[int] = []
 
             stdout_reader = threading.Thread(
                 target=self._read_stdout_until_barrier,
@@ -144,7 +144,7 @@ class Shell:
         return (error_code, stdout, stderr)
 
     def _read_stdout_until_barrier(
-        self, output: List[str], error_code: List[int]
+        self, output: list[str], error_code: list[int]
     ) -> None:
         while line := self._shell.stdout_readline():
             self._ui.step()
@@ -157,7 +157,7 @@ class Shell:
 
             output.append(line)
 
-    def _read_stderr_until_barrier(self, output: List[str]) -> None:
+    def _read_stderr_until_barrier(self, output: list[str]) -> None:
         while line := self._shell.stderr_readline():
             self._ui.step()
 
@@ -400,7 +400,7 @@ class Shell:
         return line.strip() == _READING_BARRIER_FLAG
 
     @staticmethod
-    def _strip_barrier_separator(lines: List[str]) -> None:
+    def _strip_barrier_separator(lines: list[str]) -> None:
         if not lines:
             return
 

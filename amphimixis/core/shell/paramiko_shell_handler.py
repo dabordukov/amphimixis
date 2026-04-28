@@ -1,6 +1,5 @@
 """SSH shell handler implementation."""
 
-import socket
 from ctypes import ArgumentError
 
 import paramiko
@@ -30,7 +29,7 @@ class _ParamikoHandler(IShellHandler):
                 look_for_keys=(machine.auth.password is None),
                 allow_agent=(machine.auth.password is None),
             )
-        except (paramiko.SSHException, socket.error) as e:
+        except (OSError, paramiko.SSHException) as e:
             raise paramiko.SSHException(f"Can't connect to ssh {machine}: {e}")
 
         if (transport := self.client.get_transport()) is not None:
@@ -40,7 +39,7 @@ class _ParamikoHandler(IShellHandler):
             raise ConnectionError("Can't get transport")
 
         self.chan.invoke_shell()
-        self.chan.send("exec bash --norc --noprofile\n".encode("UTF-8"))
+        self.chan.send(b"exec bash --norc --noprofile\n")
 
         self._send_marker()
         self._read_until_marker()
@@ -51,8 +50,8 @@ class _ParamikoHandler(IShellHandler):
     def run(self, command: str) -> None:
         try:
             self.chan.send((command.strip() + "\n").encode("UTF-8"))
-        except socket.error as e:
-            raise socket.error(f"Can't send command: {e}")
+        except OSError as e:
+            raise OSError(f"Can't send command: {e}") from e
 
     def stdout_readline(self) -> str:
         line = ""
@@ -73,7 +72,7 @@ class _ParamikoHandler(IShellHandler):
         return line
 
     def _send_marker(self):
-        self.chan.send((f"echo {_CLEAR_OUTPUT_FLAG}\n").encode("UTF-8"))
+        self.chan.send((f"echo {_CLEAR_OUTPUT_FLAG}\n").encode())
 
     def _read_until_marker(self):
         while (line := self.stdout_readline()) != "" and _CLEAR_OUTPUT_FLAG not in line:

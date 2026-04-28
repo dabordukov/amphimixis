@@ -107,7 +107,7 @@ def _get_stats_by_event(filepath):
     event_data = defaultdict(lambda: defaultdict(float))
 
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             for line in f:
                 res = _parse_perf_line(line)
                 if res:
@@ -208,7 +208,7 @@ def _format_df_to_text(event_name, df):
 
 def _get_raw_context(perf_file, target_symbols):
     context_raw = []
-    with open(perf_file, "r", encoding="UTF-8") as f:
+    with open(perf_file, encoding="UTF-8") as f:
         for line in f:
             if any(sym in line for sym in target_symbols):
                 context_raw.append(line.strip())

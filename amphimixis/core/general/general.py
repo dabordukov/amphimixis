@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import StrEnum
 from os.path import isabs
-from typing import Optional
 
 
 class Arch(StrEnum):
@@ -34,16 +33,16 @@ class ProfileStats:
     :var str | None perf_script_name: Filename of the archive gathered using `perf archive`.
     """
 
-    build_name: Optional[str] = None
-    executable: Optional[str] = None
-    executable_run_success: Optional[bool] = None
-    real_time: Optional[str] = None
-    user_time: Optional[str] = None
-    kernel_time: Optional[str] = None
-    perf_stat: Optional[str] = None
-    perf_record_name: Optional[str] = None
-    perf_script_name: Optional[str] = None
-    perf_archive_name: Optional[str] = None
+    build_name: str | None = None
+    executable: str | None = None
+    executable_run_success: bool | None = None
+    real_time: str | None = None
+    user_time: str | None = None
+    kernel_time: str | None = None
+    perf_stat: str | None = None
+    perf_record_name: str | None = None
+    perf_script_name: str | None = None
+    perf_archive_name: str | None = None
 
 
 ProjectStats = dict[str, dict[str, ProfileStats]]

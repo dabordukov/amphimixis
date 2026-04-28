@@ -45,7 +45,7 @@ def validate(config_file_path: str, ui: IUI = NullUI()) -> bool:
         _logger.error("Config file not found")
         return False
 
-    with open(config_file_path, "r", encoding="UTF-8") as file:
+    with open(config_file_path, encoding="UTF-8") as file:
         input_config = yaml.safe_load(file)
 
     build_system = input_config.get("build_system")
