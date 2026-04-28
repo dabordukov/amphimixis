@@ -65,7 +65,7 @@ class LaboratoryAssistant:
                 encoding="utf-8",
             ) as f_toolbox:
                 _toolbox = yaml.safe_load(f_toolbox) or {}
-                if set(_toolbox.keys()) == set([_PLATFORMS, _TOOLCHAINS, _SYSROOTS]):
+                if set(_toolbox.keys()) == {_PLATFORMS, _TOOLCHAINS, _SYSROOTS}:
                     return _toolbox
 
                 template |= _toolbox

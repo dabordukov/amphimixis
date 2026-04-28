@@ -63,6 +63,7 @@ select = [
     "I",   # isort
     "UP",  # pyupgrade
     "SIM", # simplify code
+    "C4",  # comprehensions
 ]
 
 [tool.ruff]
