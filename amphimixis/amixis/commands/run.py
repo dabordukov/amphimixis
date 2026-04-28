@@ -31,9 +31,7 @@ def show_profiling_result(project: Project) -> None:
     obj: ProjectStats = tools.load_project_stats(project)
 
     if not obj or not any(
-        obj[build][exe].executable_run_success
-        for build in obj.keys()
-        for exe in obj[build]
+        obj[build][exe].executable_run_success for build in obj for exe in obj[build]
     ):
         print("\n[!] No profiling data (.scriptout files) were generated.")
         print("\tPlease check amphimixis.log for details.")

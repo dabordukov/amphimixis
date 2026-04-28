@@ -96,16 +96,12 @@ class LaboratoryAssistant:
             if _AUTH in machine:
                 auth = MachineAuthenticationInfo(
                     machine[_AUTH][_USERNAME],
-                    (
-                        machine[_AUTH][_PASSWORD]
-                        if _PASSWORD in machine[_AUTH]
-                        else None
-                    ),
+                    machine[_AUTH].get(_PASSWORD, None),
                     machine[_AUTH][_PORT],
                 )
             return MachineInfo(
                 Arch(machine[_ARCH]),
-                machine[_ADDRESS] if _ADDRESS in machine else None,
+                machine.get(_ADDRESS, None),
                 auth,
             )
         return None

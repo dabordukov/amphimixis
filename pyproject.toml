@@ -53,12 +53,16 @@ profile = "black"
 amixis = "amphimixis.amixis.__main__:main"
 
 [tool.ruff.lint]
-ignore = ["E501"] # Ignore line length warnings
+ignore = [
+    "E501",  # Ignore line length warnings,
+    "SIM102" # Ignore "Use a single `if` instead of nested"
+]
 select = [
     "E",   # pycodestyle
     "F",   # pyflakes
     "I",   # isort
     "UP",  # pyupgrade
+    "SIM", # simplify code
 ]
 
 [tool.ruff]
