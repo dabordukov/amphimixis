@@ -61,5 +61,13 @@ disable = [
     "too-many-locals",
 ]
 
+[tool.pytest]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+]
+
 [project.scripts]
 amixis = "amphimixis.amixis.__main__:main"
