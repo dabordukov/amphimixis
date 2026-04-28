@@ -5,7 +5,7 @@ from os import path
 
 from amphimixis.amixis.utils import add_config_arg, add_path_arg
 from amphimixis.core.analyzer import analyze
-from amphimixis.core.general import IUI, NullUI, Project
+from amphimixis.core.general import IUI, NULL_UI, Project
 
 HELP_MESSAGE = "Analyze the project and detect existing CI, tests, build systems, etc."
 
@@ -20,7 +20,7 @@ def add_args(parser: ArgumentParser) -> None:
     add_config_arg(parser)
 
 
-def run_analyze(project: Project, ui: IUI = NullUI()) -> bool:
+def run_analyze(project: Project, ui: IUI = NULL_UI) -> bool:
     """Execute project analysis.
 
     :param Project project: Project instance to analyze

@@ -8,7 +8,7 @@ from ctypes import ArgumentError
 from typing import Self
 
 from amphimixis.core import logger
-from amphimixis.core.general import IUI, MachineInfo, NullUI, Project, constants
+from amphimixis.core.general import IUI, NULL_UI, MachineInfo, Project, constants
 from amphimixis.core.shell.local_shell_handler import _LocalShellHandler
 from amphimixis.core.shell.paramiko_shell_handler import _ParamikoHandler
 from amphimixis.core.shell.shell_interface import IShellHandler
@@ -31,7 +31,7 @@ class Shell:
         self,
         project: Project,
         machine: MachineInfo,
-        ui: IUI = NullUI(),
+        ui: IUI = NULL_UI,
         connect_timeout=10,
     ):
         self.project = project

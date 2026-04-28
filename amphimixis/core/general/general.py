@@ -245,6 +245,7 @@ class IUI(ABC):
         :param str sender: Identifier name of sender module
         :param str warning: Warning to user"""
 
+    @abstractmethod
     def send_error(self, sender: str, err_msg: str) -> None:
         """Send error message to user
 
@@ -301,12 +302,15 @@ class NullUI(IUI):
         pass
 
 
+NULL_UI = NullUI()
+
+
 # pylint: disable=too-few-public-methods
 class ILowLevelBuildSystem(ABC):
     """Interface for classes implementing interaction with runner (low-level build-system)"""
 
     @abstractmethod
-    def __init__(self, project: "Project", ui: IUI = NullUI()):
+    def __init__(self, project: "Project", ui: IUI):
         pass
 
     @abstractmethod
@@ -323,7 +327,7 @@ class IHighLevelBuildSystem(ABC):
         self,
         project: "Project",
         runner: ILowLevelBuildSystem,
-        ui: IUI = NullUI(),
+        ui: IUI,
     ):
         pass
 
@@ -342,6 +346,9 @@ class DummyRunner(ILowLevelBuildSystem):
         return (0, "", "")
 
 
+DUMMY_RUNNER = DummyRunner()
+
+
 # pylint: disable=too-few-public-methods
 class DummyBuildSystem(IHighLevelBuildSystem):
     """Build system that does nothing"""
@@ -354,6 +361,9 @@ class DummyBuildSystem(IHighLevelBuildSystem):
         return (0, "", "")
 
 
+DUMMY_BUILD_SYSTEM = DummyBuildSystem()
+
+
 # pylint: disable=too-few-public-methods
 class BuildSystem:
     """Common class for build systems"""
@@ -363,8 +373,8 @@ class BuildSystem:
     def __init__(
         self,
         project: "Project",
-        runner: ILowLevelBuildSystem = DummyRunner(),
-        ui: IUI = NullUI(),
+        runner: ILowLevelBuildSystem = DUMMY_RUNNER,
+        ui: IUI = NULL_UI,
     ):
         self._project = project
         self._ui = ui
@@ -434,7 +444,7 @@ class Project:
         self,
         path: str,
         builds: list[Build] | None = None,
-        build_system: IHighLevelBuildSystem = DummyBuildSystem(),
+        build_system: IHighLevelBuildSystem = DUMMY_BUILD_SYSTEM,
     ):
         self.path: str = path
         if builds is None:  # what's wrong with python?? (pylint W0102)

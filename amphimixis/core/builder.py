@@ -4,12 +4,8 @@ import os
 import pickle
 
 from amphimixis.core import logger
-from amphimixis.core.general import IUI, NullUI
-from amphimixis.core.general.general import (
-    Build,
-    Project,
-)
-from amphimixis.core.shell.shell import Shell
+from amphimixis.core.general import IUI, NULL_UI, Build, Project
+from amphimixis.core.shell import Shell
 
 _logger = logger.setup_logger("BUILDER")
 
@@ -20,7 +16,7 @@ class Builder:
     BUILDS_LIST_FILE_NAME = ".builds"
 
     @staticmethod
-    def build(project: Project, ui: IUI = NullUI()) -> None:
+    def build(project: Project, ui: IUI = NULL_UI) -> None:
         """The method build all builds"""
 
         for build in project.builds:
@@ -32,11 +28,11 @@ class Builder:
                 _logger.info("Build failed %s", build.build_name)
 
     @staticmethod
-    def build_for_linux(project: Project, build: Build, ui: IUI = NullUI()) -> bool:
+    def build_for_linux(project: Project, build: Build, ui: IUI = NULL_UI) -> bool:
         """The method build program on Linux"""
 
         ui.update_message(build.build_name, "Connecting...")
-        shell = Shell(project, build.build_machine, ui).connect()
+        shell = Shell(project, build.build_machine, ui=ui).connect()
 
         # path to build on the machine
         path: str = os.path.join(shell.get_project_workdir(), build.build_name)
@@ -118,7 +114,7 @@ class Builder:
             pickle.dump(builds, file)
 
     @staticmethod
-    def clean(project: Project, build: Build, ui: IUI = NullUI()) -> bool:
+    def clean(project: Project, build: Build, ui: IUI = NULL_UI) -> bool:
         """Clean build artifacts from build machine
 
         :param Project project: Project whose build must be cleaned

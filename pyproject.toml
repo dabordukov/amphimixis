@@ -64,6 +64,7 @@ select = [
     "UP",  # pyupgrade
     "SIM", # simplify code
     "C4",  # comprehensions
+    "B",   # bugbear
 ]
 
 [tool.ruff]

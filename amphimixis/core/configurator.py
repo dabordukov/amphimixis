@@ -9,10 +9,10 @@ import yaml
 
 from amphimixis.core.build_systems import build_systems_dict, runners_dict
 from amphimixis.core.general import (
+    DUMMY_RUNNER,
     IUI,
-    DummyRunner,
+    NULL_UI,
     MachineInfo,
-    NullUI,
     general,
     tools,
 )
@@ -29,7 +29,7 @@ _logger = setup_logger("configurator")
 
 # pylint: disable=too-many-return-statements
 def parse_config(
-    project: general.Project, config_file_path: str, ui: IUI = NullUI()
+    project: general.Project, config_file_path: str, ui: IUI = NULL_UI
 ) -> bool:
     """Main function to configure builds
 
@@ -77,7 +77,7 @@ def parse_config(
     elif len(build_systems_dict[build_system][1]) > 0:
         runner = build_systems_dict[build_system][1][0](project, ui)
     else:  # if build system doesn't have runners (like Make)
-        runner = DummyRunner()
+        runner = DUMMY_RUNNER
     project.build_system = build_systems_dict[build_system][0](project, runner, ui)
 
     for build in input_config["builds"]:
@@ -102,7 +102,7 @@ def _create_build(  # pylint: disable=R0913,R0914,R0917
     project: general.Project,
     input_config: dict[str, Any],
     build_dict: dict[str, Any],
-    ui: IUI = NullUI(),
+    ui: IUI = NULL_UI,
 ) -> bool:
     """Function to create a new build and save its configuration to a Pickle file"""
 
@@ -194,7 +194,7 @@ def _get_by_id(
 
 
 def _has_valid_arch(
-    project: general.Project, machine: general.MachineInfo, ui: IUI = NullUI()
+    project: general.Project, machine: general.MachineInfo, ui: IUI = NULL_UI
 ) -> bool:
     """Function to check whether run machine arch is valid"""
 

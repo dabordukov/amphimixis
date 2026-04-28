@@ -12,9 +12,9 @@ import yaml
 from amphimixis.core.build_systems import build_systems_dict, runners_dict
 from amphimixis.core.general import (
     IUI,
+    NULL_UI,
     Arch,
     CompilerFlagsAttrs,
-    NullUI,
     ToolchainAttrs,
 )
 from amphimixis.core.laboratory_assistant import LaboratoryAssistant
@@ -25,10 +25,10 @@ DEFAULT_PORT = 22
 _errors_count = 0
 
 _logger = setup_logger("validator")
-_ui: IUI = NullUI()
+_ui: IUI = NULL_UI
 
 
-def validate(config_file_path: str, ui: IUI = NullUI()) -> bool:
+def validate(config_file_path: str, ui: IUI = NULL_UI) -> bool:
     """Main function to validate config file
 
     :rtype: bool

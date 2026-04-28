@@ -7,7 +7,7 @@ from os import path
 
 from amphimixis.amixis.utils import add_config_arg, add_path_arg
 from amphimixis.core import Profiler, Shell, parse_config
-from amphimixis.core.general import IUI, NullUI, Project
+from amphimixis.core.general import IUI, NULL_UI, Project
 
 HELP_MESSAGE = "Profile the performance of builds"
 
@@ -71,7 +71,7 @@ def setup_profiling_environment(project: Project, ui: IUI) -> bool:
 def run_profile(
     project: Project,
     config_file_path: str,
-    ui: IUI = NullUI(),
+    ui: IUI = NULL_UI,
     events: list | None = None,
 ) -> bool:
     """Execute project profiling.

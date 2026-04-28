@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 
-from amphimixis.core.general import IUI, NullUI
+from amphimixis.core.general import IUI, NULL_UI
 from amphimixis.core.validator import validate
 
 HELP_MESSAGE = "Check correctness of the configuration file"
@@ -22,7 +22,7 @@ def add_args(parser: ArgumentParser) -> None:
     )
 
 
-def validate_cmd(args, ui: IUI = NullUI()) -> bool:
+def validate_cmd(args, ui: IUI = NULL_UI) -> bool:
     """Check correctness of the configuration file.
 
     :param Namespace args: parsed command line arguments

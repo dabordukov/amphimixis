@@ -30,7 +30,7 @@ class _ParamikoHandler(IShellHandler):
                 allow_agent=(machine.auth.password is None),
             )
         except (OSError, paramiko.SSHException) as e:
-            raise paramiko.SSHException(f"Can't connect to ssh {machine}: {e}")
+            raise paramiko.SSHException(f"Can't connect to ssh {machine}: {e}") from e
 
         if (transport := self.client.get_transport()) is not None:
             transport.set_keepalive(60)

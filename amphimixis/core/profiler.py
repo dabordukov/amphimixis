@@ -7,7 +7,7 @@ import pickle
 from amphimixis.core import general, logger, shell
 from amphimixis.core.general import (
     IUI,
-    NullUI,
+    NULL_UI,
     ProfileStats,
     ProjectStats,
     constants,
@@ -53,7 +53,7 @@ class Profiler:
             return f"{prefix} {msg}", kwargs
 
     def __init__(
-        self, project: general.Project, build: general.Build, ui: IUI = NullUI()
+        self, project: general.Project, build: general.Build, ui: IUI = NULL_UI
     ):
         self.project = project
         self.logger = self.CustomLogger(

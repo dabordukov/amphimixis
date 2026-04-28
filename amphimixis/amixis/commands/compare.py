@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 from os import path
 
 from amphimixis.amixis.utils import add_events_arg
-from amphimixis.core.general import IUI, NullUI
+from amphimixis.core.general import IUI, NULL_UI
 from amphimixis.core.perf_analyzer import main as compare_perf
 
 HELP_MESSAGE = "Compare two perf output files (.scriptout) and display the results"
@@ -42,7 +42,7 @@ def run_compare(
     file2: str,
     target_events: list[str] | None,
     max_rows: int,
-    ui: IUI = NullUI(),
+    ui: IUI = NULL_UI,
 ) -> bool:
     """Compare two perf output files and print the top `max_rows` symbols
     with the most significant changes for specified events.
