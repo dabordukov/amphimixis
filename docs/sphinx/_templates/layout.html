@@ -1,0 +1,30 @@
+{% extends "!layout.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+
+  <meta name="description" content="Amphimixis is an automated project intelligence and evaluation tool for performance analysis and migration readiness.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "Amphimixis",
+    "url": "https://amphimixis.org/",
+    "programmingLanguage": "Python",
+    "description": "An automated project intelligence and evaluation tool for performance and migration readiness.",
+    "codeRepository": "https://github.com/ebzych/amphimixis",
+    "keywords": [
+        "project analysis",
+        "build automation",
+        "profiling",
+        "performance analysis",
+        "benchmarking",
+        "migration readiness",
+        "risc-v",
+        "cross-compilation"
+    ]
+  }
+  </script>
+
+{% endblock %}

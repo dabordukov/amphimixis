@@ -1,5 +1,7 @@
 [MAIN]
-ignore-path=./tests
+ignore-path=
+    ./tests,
+    ./docs
 
 [MESSAGES CONTROL]
 disable=

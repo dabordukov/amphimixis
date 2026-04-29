@@ -1,0 +1,5 @@
+# Example configuration file
+
+```{literalinclude} ../input.yml
+:language: yaml
+```
