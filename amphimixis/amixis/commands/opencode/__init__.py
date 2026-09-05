@@ -52,10 +52,8 @@ def run_opencode(args: Namespace) -> bool:
     :rtype: bool
     """
     opencode_subcommand = args.opencode_subcommand
-    print("hello world")
-    print(args.globally)
     if opencode_subcommand == _INSTALL_SUBCMD:
-        return run_opencode_install(globally=args.globally)
+        return run_opencode_install(globally=getattr(args, "globally", False))
 
     if opencode_subcommand == _RUN_SUBCMD:
         return run_opencode_run(prompt=args.prompt)
