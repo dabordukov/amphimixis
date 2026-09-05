@@ -236,7 +236,12 @@ def _is_valid_toolchain(toolchain: Any) -> None:
                     _notify_about_error(
                         f"Invalid `toolchain`: {attr}: path `{value}` is not absolute"
                     )
-            elif attr.lower() not in CompilerFlagsAttrs and attr != "sysroot":
+            elif attr.lower() == "sysroot":
+                if not path.isabs(value):
+                    _notify_about_error(
+                        f"Invalid `toolchain`: sysroot: path `{value}` is not absolute"
+                    )
+            elif attr.lower() not in CompilerFlagsAttrs:
                 _notify_about_error(f"Invalid `toolchain`: unknown attribute `{attr}`")
 
 
