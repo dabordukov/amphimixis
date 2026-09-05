@@ -160,8 +160,8 @@ class LaboratoryAssistant:
         toolbox: dict = LaboratoryAssistant.parse_config_file()
         if name in toolbox[_TOOLCHAINS]:
             d_toolchain: dict = toolbox[_TOOLCHAINS][name]
-            toolchain = Toolchain(name, d_toolchain[_SYSROOT])
-            for attr, value in d_toolchain[_ATTRIBUTES].items():
+            toolchain = Toolchain(name, d_toolchain.get(_SYSROOT))
+            for attr, value in d_toolchain.get(_ATTRIBUTES, {}).items():
                 if attr in ToolchainAttrs:
                     toolchain.set(ToolchainAttrs(attr), value)
                 else:

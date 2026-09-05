@@ -235,3 +235,21 @@ class TestLaboratoryAssistant:
 
         assert path.exists(LaboratoryAssistant.CONFIG_DIR_PATH)
         assert is_file_exists_and_correct(LaboratoryAssistant.TOOLBOX_PATH)
+
+    def test_finding_toolchain_without_sysroot(self, _set_testing_environment) -> None:
+        """Toolchain with optional 'sysroot' omitted must be readable back."""
+        LaboratoryAssistant.add_platform("localhost", MachineInfo(Arch.X86, None, None))
+
+        toolchain = Toolchain("gcc-no-sysroot")  # sysroot stays None
+        toolchain.set(ToolchainAttrs.C_COMPILER, "/usr/bin/gcc")
+        assert LaboratoryAssistant.add_toolchain(toolchain, "localhost", Arch.X86)
+
+        found = LaboratoryAssistant.find_toolchain_by_name("gcc-no-sysroot")
+        assert found is not None
+        assert found.sysroot is None
+        assert found.get(ToolchainAttrs.C_COMPILER) == "/usr/bin/gcc"
+
+        # toolbox file must not contain the absent 'sysroot' key at all
+        with open(LaboratoryAssistant.TOOLBOX_PATH, encoding="utf-8") as f_toolbox:
+            toolbox = yaml.safe_load(f_toolbox)
+        assert _SYSROOT not in toolbox[_TOOLCHAINS]["gcc-no-sysroot"]
