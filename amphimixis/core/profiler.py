@@ -569,16 +569,16 @@ class Profiler:
         Structure:
         {"build1":{"executable1": ProfileStats, "executable2": ...}, "build2": ...}
         """
-        merged_stats = {self.build.build_name: self.stats}
+        stats = {self.build.build_name: self.stats}
 
         try:
             with open(
                 os.path.join(os.getcwd(), self._get_stats_filename()), "rb"
             ) as file:
-                obj: ProjectStats = pickle.load(file)
-            merged_stats.update(obj)
+                merged_stats: ProjectStats = pickle.load(file)
+            merged_stats.update(stats)
         except FileNotFoundError:
-            pass
+            merged_stats = stats
 
         with open(os.path.join(os.getcwd(), self._get_stats_filename()), "wb") as file:
             pickle.dump(merged_stats, file)

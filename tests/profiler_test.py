@@ -1,4 +1,5 @@
 # pylint: skip-file
+import pickle
 import subprocess
 from pathlib import Path
 
@@ -553,3 +554,34 @@ class TestProfiler:
 
         assert run.call_args_list[0].args == ("rm /tmp/a",)
         assert run.call_args_list[1].args == ("rm /tmp/b",)
+
+    def test_save_stats_keeps_latest_run_for_the_same_build(
+        self,
+        get_shellmocked_profiler,
+        monkeypatch,
+        tmp_path,
+    ):
+        """Re-profiling the same build must store fresh data, not the stale one."""
+        monkeypatch.chdir(tmp_path)
+
+        def _stats(real_time: str) -> general.ProfileStats:
+            stats = general.ProfileStats(
+                build_name="test_build", executable=EXECUTABLE_FILENAME
+            )
+            stats.real_time = real_time
+            return stats
+
+        first: Profiler = get_shellmocked_profiler([EXECUTABLE_FILENAME])
+        first.stats[EXECUTABLE_FILENAME] = _stats("0.1")
+        first.save_stats()
+
+        second: Profiler = get_shellmocked_profiler([EXECUTABLE_FILENAME])
+        second.stats[EXECUTABLE_FILENAME] = _stats("0.2")
+        second.save_stats()
+
+        stats_file = Path.cwd() / second._get_stats_filename()
+        assert stats_file.exists()
+        with stats_file.open("rb") as file:
+            saved = pickle.load(file)
+
+        assert saved["test_build"][EXECUTABLE_FILENAME].real_time == "0.2"
