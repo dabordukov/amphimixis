@@ -48,6 +48,10 @@ def validate(config_file_path: str, ui: IUI = NULL_UI) -> bool:
     with open(config_file_path, encoding="UTF-8") as file:
         input_config = yaml.safe_load(file)
 
+    if not isinstance(input_config, dict):
+        _notify_about_error("Config file must contain a dictionary of sections")
+        return False
+
     build_system = input_config.get("build_system")
     if (
         isinstance(build_system, str)
@@ -60,32 +64,53 @@ def validate(config_file_path: str, ui: IUI = NULL_UI) -> bool:
         _notify_about_error(f"Invalid runner: {runner}")
 
     # validate platforms
-    platforms = input_config.get("platforms", {})
-    if platforms == {}:
-        _notify_about_error("Platforms not found")
-
+    platforms = _get_section(input_config, "platforms", "platform")
     for platform in platforms:
         _is_valid_platform(platform)
 
     # validate recipes
-    recipes = input_config.get("recipes", {})
-    if recipes == {}:
-        _notify_about_error("Recipes not found")
-
+    recipes = _get_section(input_config, "recipes", "recipe")
     for recipe in recipes:
         _is_valid_recipe(recipe)
 
     # validate builds
-    builds = input_config.get("builds", {})
-    if builds == {}:
-        _notify_about_error("Builds not found")
-
+    builds = _get_section(input_config, "builds", "build")
     for build in builds:
-        _is_valid_build(input_config, build)
+        _is_valid_build(platforms, recipes, build)
 
     _logger.info("Validation completed, errors found: %s", _errors_count)
 
     return _errors_count == 0
+
+
+def _get_section(input_config: dict, section_name: str, entry_name: str) -> list[dict]:
+    """Get dictionary entries of a configuration section.
+
+    Reports an error instead of crashing when the section is missing,
+    is not a list, or contains non-dictionary entries.
+
+    :param dict input_config: Loaded configuration.
+    :param str section_name: Name of the section (e.g. 'platforms').
+    :param str entry_name: Singular name of entries for messages (e.g. 'platform').
+    :return: Dictionary entries of the section.
+    :rtype: list[dict]
+    """
+    section = input_config.get(section_name)
+    if section is None:
+        _notify_about_error(f"{entry_name.capitalize()}s not found")
+        return []
+
+    if not isinstance(section, list):
+        _notify_about_error(f"`{section_name}` must be a list of {entry_name}s")
+        return []
+
+    entries = []
+    for item in section:
+        if isinstance(item, dict):
+            entries.append(item)
+        else:
+            _notify_about_error(f"Invalid {entry_name} entry: {item}")
+    return entries
 
 
 def _is_valid_platform(platform: dict[str, int | str]):
@@ -159,12 +184,16 @@ def _is_valid_recipe(recipe: dict[str, int | str]):
             )
 
 
-def _is_valid_build(input_config: dict[str, Any], build: dict[str, int | str]):
+def _is_valid_build(
+    platforms: list[dict[str, str | int]],
+    recipes: list[dict[str, str | int]],
+    build: dict[str, int | str],
+):
     """Check whether build is valid."""
     build_machine_id = build.get("build_machine")
     if (
         not isinstance(build_machine_id, int | str)
-        or not _get_by_id(input_config["platforms"], build_machine_id)
+        or not _get_by_id(platforms, build_machine_id)
         and not LaboratoryAssistant.find_platform(str(build_machine_id))
     ):
         _notify_about_error(f"Invalid `build_machine` in build: {build_machine_id}")
@@ -172,15 +201,13 @@ def _is_valid_build(input_config: dict[str, Any], build: dict[str, int | str]):
     run_machine_id = build.get("run_machine")
     if (
         not isinstance(run_machine_id, int | str)
-        or not _get_by_id(input_config["platforms"], run_machine_id)
+        or not _get_by_id(platforms, run_machine_id)
         and not LaboratoryAssistant.find_platform(str(run_machine_id))
     ):
         _notify_about_error(f"Invalid `run_machine` in build: {run_machine_id}")
 
     recipe_id = build.get("recipe_id")
-    if not isinstance(recipe_id, int | str) or not _get_by_id(
-        input_config["recipes"], recipe_id
-    ):
+    if not isinstance(recipe_id, int | str) or not _get_by_id(recipes, recipe_id):
         _notify_about_error(f"Invalid `recipe_id` in build: {recipe_id}")
 
     executables = build.get("executables")
